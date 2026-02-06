@@ -221,11 +221,8 @@ __marimo__/
 models/
 checkpoints/
 
-# Experiment results (keep folder structure, ignore contents)
-results/logs/*
-results/outputs/*
-!results/logs/.gitkeep
-!results/outputs/.gitkeep
+# Experiment results
+results/
 
 # Wandb / MLflow
 wandb/

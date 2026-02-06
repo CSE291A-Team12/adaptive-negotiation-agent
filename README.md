@@ -9,9 +9,7 @@ Adaptive negotiation agent using GPT-OSS as a real-time strategy profiler to boo
 ```bash
 git clone --recurse-submodules git@github.com:lizababior/adaptive-negotiation-agent.git
 cd adaptive-negotiation-agent
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+uv sync
 cp .env.example .env  # Add your API keys
 ```
 
@@ -23,6 +21,6 @@ configs/           - Experiment configs
 scripts/           - Run and evaluate experiments
 tests/             - Tests
 notebooks/         - Exploration
-results/           - Logs and outputs
+results/           - Experiment logs (gitignored)
 negotiation_arena/ - NegotiationArena (git submodule)
 ```
