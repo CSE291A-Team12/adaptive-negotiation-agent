@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+uv run ruff check --fix --exclude negotiation_arena .
+uv run ruff format --exclude negotiation_arena .
+git add -u
