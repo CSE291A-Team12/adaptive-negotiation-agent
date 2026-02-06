@@ -10,6 +10,7 @@ Adaptive negotiation agent using GPT-OSS as a real-time strategy profiler to boo
 git clone --recurse-submodules git@github.com:lizababior/adaptive-negotiation-agent.git
 cd adaptive-negotiation-agent
 uv sync
+git config core.hooksPath .githooks
 cp .env.example .env  # Add your API keys
 ```
 

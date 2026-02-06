@@ -25,7 +25,9 @@ from games.buy_sell_game.game import BuySellGame
 load_dotenv()
 
 MODEL = "gpt-4o-mini"
-BASE_LOG_DIR = os.path.join(os.path.dirname(__file__), "..", "results", "persona_buysell")
+BASE_LOG_DIR = os.path.join(
+    os.path.dirname(__file__), "..", "results", "persona_buysell"
+)
 
 # (label, seller_persona, buyer_persona)
 SCENARIOS = [
@@ -103,11 +105,11 @@ if __name__ == "__main__":
     results = []
 
     for label, seller_persona, buyer_persona in SCENARIOS:
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"Scenario: {label}")
         print(f"  Seller: {seller_persona or '(neutral)'}")
         print(f"  Buyer:  {buyer_persona or '(neutral)'}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         try:
             result = run_scenario(label, seller_persona, buyer_persona)
@@ -123,9 +125,9 @@ if __name__ == "__main__":
             results.append({"scenario": label, "error": str(e)})
 
     # Print summary table
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("SUMMARY")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"{'Scenario':<40} {'Result':<8} {'Seller':>6} {'Buyer':>6} {'Turns':>5}")
     print("-" * 70)
     for r in results:
