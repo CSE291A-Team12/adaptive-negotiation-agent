@@ -1,11 +1,7 @@
-## Summary
-Brief description of changes.
+## What and why?
 
-## Changes
--
 
-## Testing
-- [ ] Tests pass (`pytest`)
-- [ ] Linting passes (`ruff check .`)
+## How to test?
+
 
 Closes #
