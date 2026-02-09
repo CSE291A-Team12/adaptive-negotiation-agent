@@ -17,12 +17,16 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "negotiation_ar
 
 from dotenv import load_dotenv
 
-from negotiationarena.agents.chatgpt import ChatGPTAgent
-from negotiationarena.game_objects.resource import Resources
-from negotiationarena.game_objects.goal import BuyerGoal, SellerGoal
-from negotiationarena.game_objects.valuation import Valuation
-from negotiationarena.constants import AGENT_ONE, AGENT_TWO, MONEY_TOKEN
-from games.buy_sell_game.game import BuySellGame
+from negotiation_arena.negotiationarena.agents.chatgpt import ChatGPTAgent
+from negotiation_arena.negotiationarena.game_objects.resource import Resources
+from negotiation_arena.negotiationarena.game_objects.goal import BuyerGoal, SellerGoal
+from negotiation_arena.negotiationarena.game_objects.valuation import Valuation
+from negotiation_arena.negotiationarena.constants import (
+    AGENT_ONE,
+    AGENT_TWO,
+    MONEY_TOKEN,
+)
+from negotiation_arena.games.buy_sell_game.game import BuySellGame
 
 load_dotenv()
 
