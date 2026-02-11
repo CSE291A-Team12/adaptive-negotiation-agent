@@ -5,7 +5,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "negotiation_arena"))
 
 import negotiation_arena.negotiationarena.agents.llama2 as Llama
-from negotiation_arena.games.buy_sell_game import profiler_prompt
+import profiler_prompt
 
 from negotiation_arena.negotiationarena.constants import AGENT_TWO, AGENT_ONE
 
