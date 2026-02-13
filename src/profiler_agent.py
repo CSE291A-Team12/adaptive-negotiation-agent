@@ -16,7 +16,13 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
         super().__init__(
             model=negotiator_model, **kwargs
         )  # can set temperature, max tokens, etc
-
+        self.possible_strategies = [
+            "Collaborating",
+            "Competing",
+            "Compromising",
+            "Accomodating",
+            "Avoiding",
+        ]  # WORK IN PROGRESS, stores a list of opponent strategies. Started with small list
         self.profiler_model = profiler_model
         self.negotiator_model = negotiator_model
 
@@ -64,8 +70,8 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
         """
 
         self.negotiator_prompt = system_prompt
-        self.profiler_prompt = (
-            profiler_prompt.profiler_prompt()
+        self.profiler_prompt = profiler_prompt.profiler_prompt(
+            agent_name=self.agent_name, possible_strategies=self.possible_strategies
         )  # still need to work on this function
 
         if AGENT_ONE in self.agent_name:
