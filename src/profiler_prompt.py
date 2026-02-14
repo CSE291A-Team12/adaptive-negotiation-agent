@@ -31,9 +31,9 @@ RULES:
 ```
 1. Each response from you must provide :
     
-    i) A probability table. Among the list of possible strategies in {possible_strategies}, estimate the probability that the opponent is using each strategy given the history 
+    i) A probability table. Among the list of possible strategies in {possible_strategies}, estimate the probability that the opponent is using each strategy given the history
 of the conversation. Your output needs to follow the format:
-            </{STRATEGY_TAG}> : probability \n
+            <{STRATEGY_TAG}> strategy_name </{STRATEGY_TAG}> : probability \n
 
     ii) After the probability table, you must offer the best strategy to counter the opponent's response to maximize {agent_name}'s payoff.
 
@@ -53,7 +53,7 @@ keep it relevant and explicit.
 All the responses you send should contain the following and in this order:
 
 ```
-<{MESSAGE_TAG}> [add here] </{MESSAGE_TAG}
+<{MESSAGE_TAG}> [add here] </{MESSAGE_TAG}>
 <{REASONING_TAG}> [add here] </{REASONING_TAG}>
 ```
 """
