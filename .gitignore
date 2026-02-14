@@ -230,3 +230,6 @@ mlruns/
 
 # OS
 .DS_Store
+
+# API Keys
+.env.example
