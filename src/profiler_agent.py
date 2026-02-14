@@ -1,13 +1,17 @@
 import sys
 import os
 
-# Add the submodule to the path so its packages are importable
+# Add project root (for `negotiation_arena.xxx` imports) and
+# submodule root (for submodule-internal `negotiationarena.xxx` / `games.xxx` imports)
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "negotiation_arena"))
 
-import negotiation_arena.negotiationarena.agents.llama2 as Llama
+import openai
+import negotiationarena.agents.llama2 as Llama
 import profiler_prompt
 
-from negotiation_arena.negotiationarena.constants import AGENT_TWO, AGENT_ONE
+from copy import deepcopy
+from negotiationarena.constants import AGENT_TWO, AGENT_ONE
 
 
 class ProfilerAgent(Llama.LLama2ChatAgent):
@@ -20,18 +24,42 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
             "Collaborating",
             "Competing",
             "Compromising",
-            "Accomodating",
+            "Accommodating",
             "Avoiding",
-        ]  # WORK IN PROGRESS, stores a list of opponent strategies. Started with small list
+        ]
         self.profiler_model = profiler_model
         self.negotiator_model = negotiator_model
 
-        self.profiler_logs = []  # for us to see what profiler agents is responding
+        self.profiler_logs = []  # for us to see what profiler agent is responding
+
+        # Override the inherited Anyscale client with HuggingFace Inference API
+        # for the negotiator (Llama-3-8B). Model is passed in the request body.
+        self.client = openai.OpenAI(
+            base_url="https://router.huggingface.co/v1",
+            api_key=os.environ.get("HF_TOKEN"),
+        )
+
+        # Separate client for the profiler (GPT-4o via OpenAI)
+        self.profiler_client = openai.OpenAI(
+            api_key=os.environ.get("OPENAI_API_KEY"),
+        )
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        for k, v in self.__dict__.items():
+            if k in ("client", "profiler_client") and not isinstance(v, str):
+                v = v.__class__.__name__
+            setattr(result, k, deepcopy(v, memo))
+        return result
 
     def run_profiler(self):
+        messages = [
+            {"role": "system", "content": self.profiler_prompt},
+        ] + self.conversation
 
-        messages = [self.profiler_prompt, self.conversation]
-        response = self.client.chat.completions.create(
+        response = self.profiler_client.chat.completions.create(
             model=self.profiler_model,
             messages=messages,
             temperature=0.1,  # Keep profiling consistent
@@ -47,8 +75,13 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
         # negotiator prompt but with extra instruction from profiler
         negotiator_prompt_with_instructions = (
             f"{self.negotiator_prompt}\n\n"
-            f" Follow strategic instructions from your profiler: {instructions}"
+            f"Follow strategic instructions from your profiler: {instructions}"
         )
+
+        # DEBUG: inspect what we're sending
+        # print(f"  [DEBUG] Negotiator base_url: {self.client.base_url}")
+        # print(f"  [DEBUG] Negotiator model: {self.negotiator_model}")
+        # print(f"  [DEBUG] HF_TOKEN set: {bool(self.client.api_key)}, starts with: {str(self.client.api_key)[:10]}...")
 
         response = self.client.chat.completions.create(
             model=self.negotiator_model,
@@ -66,13 +99,13 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
         Roles:
         user: messages from opponent to self
         assistant: message from self to send to opponent
-        system: set of instruction/behavior for agnet
+        system: set of instruction/behavior for agent
         """
 
         self.negotiator_prompt = system_prompt
         self.profiler_prompt = profiler_prompt.profiler_prompt(
             agent_name=self.agent_name, possible_strategies=self.possible_strategies
-        )  # still need to work on this function
+        )
 
         if AGENT_ONE in self.agent_name:
             # we use the user role to tell the assistant that it has to start.
@@ -87,7 +120,7 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
                 self.prompt_entity_initializer, self.negotiator_prompt
             )
         else:
-            raise "No Player 1 or Player 2 in role"
+            raise ValueError("No Player 1 or Player 2 in role")
 
     def chat(self):
 
