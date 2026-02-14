@@ -13,8 +13,8 @@ uv sync
 
 ## I do not recommend having this. Now sure why we have it here but it auto stages rather than let you add by yourself.
 # git config core.hooksPath .githooks 
-cp .env.example .env  # Add your API keys
 ```
+Remember to add API keys in .env
 
 ## Project Structure
 
