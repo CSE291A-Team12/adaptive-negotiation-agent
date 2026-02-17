@@ -22,7 +22,7 @@ def profiler_prompt(
     possible_strategies,  # NEW
     agent_name,  # NEW
 ):
-    prompt = f"""You are a strategist behind an agent that is playing a game where they are buying or selling an object. There is only one object for sale/purcahse.
+    prompt = f"""You are a strategist behind an agent that is playing a game where they are buying or selling an object. There is only one object for sale/purchase.
 
 {AGENT_ONE} is going to sell one object. {AGENT_TWO} gives {MONEY_TOKEN} to buy resources. You will be strategizing on behalf of {agent_name}.
 
