@@ -104,11 +104,18 @@ class TestPromptTagOrdering:
 
 
 class TestDeepCopy:
-    """__deepcopy__ should preserve client objects."""
+    """__deepcopy__ converts clients to strings for JSON serialization."""
 
-    def test_deepcopy_preserves_client_types(self, agent):
-        """After deepcopy, client and profiler_client should not be strings."""
+    def test_deepcopy_converts_clients_to_strings(self, agent):
+        """After deepcopy, client and profiler_client should be class-name strings (for JSON serialization)."""
         agent.init_agent(system_prompt="You are a buyer.", role=" You go second.")
         copied = deepcopy(agent)
-        assert not isinstance(copied.client, str), f"client became {copied.client!r}"
-        assert not isinstance(copied.profiler_client, str), f"profiler_client became {copied.profiler_client!r}"
+        assert isinstance(copied.client, str), f"client should be string, got {type(copied.client)}"
+        assert isinstance(copied.profiler_client, str), f"profiler_client should be string, got {type(copied.profiler_client)}"
+
+    def test_original_clients_unchanged_after_deepcopy(self, agent):
+        """Deepcopy should not affect the original agent's live client objects."""
+        agent.init_agent(system_prompt="You are a buyer.", role=" You go second.")
+        deepcopy(agent)
+        assert not isinstance(agent.client, str), "original client was mutated"
+        assert not isinstance(agent.profiler_client, str), "original profiler_client was mutated"

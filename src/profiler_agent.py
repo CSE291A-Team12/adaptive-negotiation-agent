@@ -50,7 +50,9 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
         memo[id(self)] = result
         for k, v in self.__dict__.items():
             if k in ("client", "profiler_client"):
-                setattr(result, k, v)
+                # Convert to string for serialization (get_state → JSON);
+                # the original agent keeps the live client objects.
+                setattr(result, k, v.__class__.__name__)
             else:
                 setattr(result, k, deepcopy(v, memo))
         return result
