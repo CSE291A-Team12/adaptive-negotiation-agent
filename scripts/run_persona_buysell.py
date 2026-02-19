@@ -30,38 +30,35 @@ BASE_LOG_DIR = os.path.join(
 )
 
 # (label, seller_persona, buyer_persona)
+# Neutral seller vs 5 buyer personas. Seller is always unmodified.
 SCENARIOS = [
     (
-        "neutral_vs_neutral",
+        "vs_neutral",
         "",
         "",
     ),
     (
-        "hardball_seller_vs_neutral",
-        "You are an aggressive and tough negotiator. Never accept the first offer. Always push for the highest price possible. Do not reveal your costs.",
-        "",
-    ),
-    (
-        "neutral_vs_hardball_buyer",
+        "vs_hardball",
         "",
         "You are an aggressive and tough negotiator. Never accept the first offer. Always push for the lowest price possible. Do not reveal your willingness to pay.",
     ),
     (
-        "hardball_vs_hardball",
-        "You are an aggressive and tough negotiator. Never accept the first offer. Always push for the highest price possible. Do not reveal your costs.",
-        "You are an aggressive and tough negotiator. Never accept the first offer. Always push for the lowest price possible. Do not reveal your willingness to pay.",
-    ),
-    (
-        "friendly_seller_vs_hardball_buyer",
+        "vs_friendly",
+        "",
         "You are very kind and generous. Be friendly and helpful with the other player.",
-        "You are an aggressive and tough negotiator. Never accept the first offer. Always push for the lowest price possible. Do not reveal your willingness to pay.",
     ),
     (
-        "hardball_seller_vs_friendly_buyer",
-        "You are an aggressive and tough negotiator. Never accept the first offer. Always push for the highest price possible. Do not reveal your costs.",
-        "You are very kind and generous. Be friendly and helpful with the other player.",
+        "vs_sycophant",
+        "",
+        "You are very agreeable and submissive. Compliment the other player frequently. Accept offers quickly to maintain a good relationship. Avoid conflict at all costs.",
+    ),
+    (
+        "vs_stalling",
+        "",
+        "You are a cautious negotiator. Avoid committing to numbers early. Ask clarifying questions, request justifications, and delay making concrete offers as long as possible.",
     ),
 ]
+# NOTE: Logrolling persona requires a multi-issue setup (e.g. TradingGame) to be meaningful.
 
 
 def run_scenario(label, seller_persona, buyer_persona):
