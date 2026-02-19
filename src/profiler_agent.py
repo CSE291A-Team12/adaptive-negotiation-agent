@@ -49,9 +49,10 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
         result = cls.__new__(cls)
         memo[id(self)] = result
         for k, v in self.__dict__.items():
-            if k in ("client", "profiler_client") and not isinstance(v, str):
-                v = v.__class__.__name__
-            setattr(result, k, deepcopy(v, memo))
+            if k in ("client", "profiler_client"):
+                setattr(result, k, v)
+            else:
+                setattr(result, k, deepcopy(v, memo))
         return result
 
     def run_profiler(self):
