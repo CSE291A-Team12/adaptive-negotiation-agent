@@ -233,3 +233,6 @@ mlruns/
 
 # API Keys
 .env
+
+# Claude
+.claude/
