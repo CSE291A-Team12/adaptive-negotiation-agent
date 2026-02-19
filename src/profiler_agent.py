@@ -21,11 +21,11 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
             model=negotiator_model, **kwargs
         )  # can set temperature, max tokens, etc
         self.possible_strategies = [
-            "Collaborating",
-            "Competing",
-            "Compromising",
-            "Accommodating",
-            "Avoiding",
+            "Neutral",
+            "Hardball",
+            "Friendly",
+            "Sycophant",
+            "Stalling",
         ]
         self.profiler_model = profiler_model
         self.negotiator_model = negotiator_model
