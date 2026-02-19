@@ -53,8 +53,8 @@ keep it relevant and explicit.
 All the responses you send should contain the following and in this order:
 
 ```
-<{MESSAGE_TAG}> [add here] </{MESSAGE_TAG}>
 <{REASONING_TAG}> [add here] </{REASONING_TAG}>
+<{MESSAGE_TAG}> [add here] </{MESSAGE_TAG}>
 ```
 """
 
