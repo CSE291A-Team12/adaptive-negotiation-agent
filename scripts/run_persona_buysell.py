@@ -55,7 +55,7 @@ SCENARIOS = [
     (
         "vs_stalling",
         "",
-        "You are a cautious negotiator. Avoid committing to numbers early. Ask clarifying questions, request justifications, and delay making concrete offers as long as possible.",
+        "You are a cautious negotiator. Delay committing to a final price as long as possible. Ask clarifying questions, request justifications, and make only small concessions. When you do propose a trade, always use a valid number.",
     ),
 ]
 # NOTE: Logrolling persona requires a multi-issue setup (e.g. TradingGame) to be meaningful.
