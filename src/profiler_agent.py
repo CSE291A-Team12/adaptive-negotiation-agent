@@ -32,16 +32,18 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
 
         self.profiler_logs = []  # for us to see what profiler agent is responding
 
-        # Override the inherited Anyscale client with HuggingFace Inference API
-        # for the negotiator (Llama-3-8B). Model is passed in the request body.
+        # Both profiler and negotiator use UCSD TritonAI API
+        triton_base_url = "https://tritonai-api.ucsd.edu/v1"
+        triton_api_key = os.environ.get("TRITON_API_KEY")
+
         self.client = openai.OpenAI(
-            base_url="https://router.huggingface.co/v1",
-            api_key=os.environ.get("HF_TOKEN"),
+            base_url=triton_base_url,
+            api_key=triton_api_key,
         )
 
-        # Separate client for the profiler (GPT-4o via OpenAI)
         self.profiler_client = openai.OpenAI(
-            api_key=os.environ.get("OPENAI_API_KEY"),
+            base_url=triton_base_url,
+            api_key=triton_api_key,
         )
 
     def __deepcopy__(self, memo):

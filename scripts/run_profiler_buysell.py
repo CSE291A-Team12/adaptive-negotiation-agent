@@ -29,8 +29,8 @@ from games.buy_sell_game.game import BuySellGame
 from profiler_agent import ProfilerAgent
 
 OPPONENT_MODEL = "gpt-4o-mini"
-NEGOTIATOR_MODEL = "meta-llama/Meta-Llama-3-8B-Instruct"
-PROFILER_MODEL = "gpt-4o"
+NEGOTIATOR_MODEL = "api-llama-4-scout"
+PROFILER_MODEL = "api-gpt-oss-120b"
 
 BASE_LOG_DIR = os.path.join(
     os.path.dirname(__file__), "..", "results", "profiler_buysell"
