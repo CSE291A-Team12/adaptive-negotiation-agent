@@ -29,7 +29,7 @@ DEFAULT_STRATEGIES = ["Neutral", "Hardball", "Friendly", "Sycophant", "Stalling"
 
 
 def run_buysell_experiment(
-    log_iteration,
+    log_iteration = 1,
     self_is_buyer = False,
     opponent_model="api-gpt-oss-120b",
     self_model="meta-llama/Meta-Llama-3-8B-Instruct",
