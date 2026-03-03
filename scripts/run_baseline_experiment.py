@@ -8,8 +8,6 @@ import sys
 import os
 import traceback
 
-import openai
-
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "negotiation_arena"))
 
@@ -36,11 +34,6 @@ BASE_LOG_DIR = os.path.join(
     os.path.dirname(__file__), "..", "results", "baseline_experiment"
 )
 
-TRITON_CLIENT = openai.OpenAI(
-    base_url="https://tritonai-api.ucsd.edu",
-    api_key=os.environ.get("TRITON_API_KEY"),
-)
-
 # Static seller (our agent) vs 5 buyer personas
 SCENARIOS = [
     (f"vs_{label}", "", persona) for label, persona in OPPONENT_PERSONAS.items()
@@ -51,9 +44,7 @@ def run_scenario(label, seller_persona, buyer_persona):
     log_dir = os.path.join(BASE_LOG_DIR, label)
 
     seller = ChatGPTAgent(agent_name=AGENT_ONE, model=SELF_MODEL)
-    seller.client = TRITON_CLIENT
     buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL, max_tokens=800)
-    buyer.client = TRITON_CLIENT
 
     game = BuySellGame(
         players=[seller, buyer],

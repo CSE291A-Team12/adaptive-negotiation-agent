@@ -31,27 +31,18 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
         self.negotiator_model = negotiator_model
         self.profiler_logs = []  # for us to see what profiler agent is responding
 
-        # Single TritonAI client shared by negotiator and profiler (different model IDs)
-        triton = openai.OpenAI(
-            base_url="https://tritonai-api.ucsd.edu",
-            api_key=os.environ.get("TRITON_API_KEY"),
-        )
-        self.client = triton
-        self.profiler_client = triton
-
-    # openai.OpenAI clients can't be deep-copied; replace with class name
-    # string in copies (used for game state JSON serialization).
-    _CLIENT_ATTRS = frozenset({"client", "profiler_client"})
+        client = openai.OpenAI()
+        self.client = client
+        self.profiler_client = client
 
     def __deepcopy__(self, memo):
         cls = self.__class__
         result = cls.__new__(cls)
         memo[id(self)] = result
         for k, v in self.__dict__.items():
-            if k in self._CLIENT_ATTRS:
-                setattr(result, k, v.__class__.__name__)
-            else:
-                setattr(result, k, deepcopy(v, memo))
+            if k in ("client", "profiler_client") and not isinstance(v, str):
+                v = v.__class__.__name__
+            setattr(result, k, deepcopy(v, memo))
         return result
 
     def run_profiler(self):
