@@ -1,8 +1,5 @@
 """Unified N-run experiment runner for baseline and profiler comparisons.
 
-Runs BuySellGame experiments across 5 opponent strategies with retry logic.
-Supports baseline (static Mistral-small) and profiler (Mistral-small + GPT-OSS profiler).
-
 Usage:
     python scripts/run_experiment.py --mode both --num-runs 3
     python scripts/run_experiment.py --mode baseline --num-runs 5 --role buyer
@@ -14,6 +11,8 @@ import sys
 import os
 import traceback
 from datetime import datetime
+
+import openai
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -30,14 +29,14 @@ from negotiationarena.game_objects.valuation import Valuation
 from negotiationarena.constants import AGENT_ONE, AGENT_TWO, MONEY_TOKEN
 from games.buy_sell_game.game import BuySellGame
 from profiler_agent import ProfilerAgent
+from constants import OPPONENT_PERSONAS
 
 # ── Models ──────────────────────────────────────────────────────────
-SELF_MODEL = "api-mistral-small-3.2-2506"       # baseline negotiator
-NEGOTIATOR_MODEL = "api-mistral-small-3.2-2506"  # profiler negotiator
-PROFILER_MODEL = "api-gpt-oss-120b"              # profiler brain
-OPPONENT_MODEL = "api-gpt-oss-120b"              # opponent
+SELF_MODEL = "api-llama-4-scout"        # baseline negotiator
+NEGOTIATOR_MODEL = "api-llama-4-scout"  # profiler negotiator
+PROFILER_MODEL = "api-gpt-oss-120b"     # profiler brain
+OPPONENT_MODEL = "api-gpt-oss-120b"     # opponent
 
-# ── Game params ─────────────────────────────────────────────────────
 SELLER_COST = 40
 BUYER_WTP = 60
 ITERATIONS = 10
@@ -47,36 +46,25 @@ BASE_LOG_DIR = os.path.join(
     os.path.dirname(__file__), "..", "results", "experiments"
 )
 
-OPPONENT_PERSONAS = {
-    "neutral": "",
-    "hardball": (
-        "You are an aggressive and tough negotiator. Never accept the first offer. "
-        "Always push for the lowest price possible. Do not reveal your willingness to pay."
-    ),
-    "friendly": (
-        "You are very kind and generous. Be friendly and helpful with the other player."
-    ),
-    "sycophant": (
-        "You are very agreeable and submissive. Compliment the other player frequently. "
-        "Accept offers quickly to maintain a good relationship. Avoid conflict at all costs."
-    ),
-    "stalling": (
-        "You are a cautious negotiator. Delay committing to a final price as long as possible. "
-        "Ask clarifying questions, request justifications, and make only small concessions. "
-        "When you do propose a trade, always use a valid number."
-    ),
-}
+TRITON_CLIENT = openai.OpenAI(
+    base_url="https://tritonai-api.ucsd.edu",
+    api_key=os.environ.get("TRITON_API_KEY"),
+)
 
 
 def run_baseline_scenario(persona_label, persona_prompt, self_is_seller, log_dir):
     """Run a single baseline game (static agent, no profiler)."""
     if self_is_seller:
         seller = ChatGPTAgent(agent_name=AGENT_ONE, model=SELF_MODEL)
+        seller.client = TRITON_CLIENT
         buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL)
+        buyer.client = TRITON_CLIENT
         social = ["", persona_prompt]
     else:
         seller = ChatGPTAgent(agent_name=AGENT_ONE, model=OPPONENT_MODEL)
+        seller.client = TRITON_CLIENT
         buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=SELF_MODEL)
+        buyer.client = TRITON_CLIENT
         social = [persona_prompt, ""]
 
     game = BuySellGame(
@@ -118,9 +106,11 @@ def run_profiler_scenario(persona_label, persona_prompt, profiler_is_seller, log
             negotiator_model=NEGOTIATOR_MODEL,
         )
         buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL)
+        buyer.client = TRITON_CLIENT
         social = ["", persona_prompt]
     else:
         seller = ChatGPTAgent(agent_name=AGENT_ONE, model=OPPONENT_MODEL)
+        seller.client = TRITON_CLIENT
         buyer = ProfilerAgent(
             agent_name=AGENT_TWO,
             profiler_model=PROFILER_MODEL,

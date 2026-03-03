@@ -27,32 +27,11 @@ from negotiationarena.game_objects.valuation import Valuation
 from negotiationarena.constants import AGENT_ONE, AGENT_TWO, MONEY_TOKEN
 from games.buy_sell_game.game import BuySellGame
 from profiler_agent import ProfilerAgent
-
-
+from constants import OPPONENT_PERSONAS
 
 BASE_LOG_DIR = os.path.join(
     os.path.dirname(__file__), "..", "results", "profiler_buysell"
 )
-
-OPPONENT_PERSONAS = {
-    "neutral": "",
-    "hardball": (
-        "You are an aggressive and tough negotiator. Never accept the first offer. "
-        "Always push for the lowest price possible. Do not reveal your willingness to pay."
-    ),
-    "friendly": (
-        "You are very kind and generous. Be friendly and helpful with the other player."
-    ),
-    "sycophant": (
-        "You are very agreeable and submissive. Compliment the other player frequently. "
-        "Accept offers quickly to maintain a good relationship. Avoid conflict at all costs."
-    ),
-    "stalling": (
-        "You are a cautious negotiator. Delay committing to a final price as long as possible. "
-        "Ask clarifying questions, request justifications, and make only small concessions. "
-        "When you do propose a trade, always use a valid number."
-    ),
-}
 
 
 def save_profiler_logs(profiler_agent, log_dir):

@@ -1,9 +1,4 @@
-"""Baseline experiment: static Mistral-small vs GPT-OSS across 5 opponent strategies.
-
-Seller (Player RED) = Mistral-small (our baseline agent, no profiler)
-Buyer (Player BLUE) = GPT-OSS with persona
-
-Seller cost: 40 ZUP  |  Buyer WTP: 60 ZUP  |  10 iterations
+"""Baseline experiment
 
 Usage:
     python scripts/run_baseline_experiment.py
@@ -13,6 +8,9 @@ import sys
 import os
 import traceback
 
+import openai
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "negotiation_arena"))
 
 from dotenv import load_dotenv
@@ -23,14 +21,13 @@ from negotiationarena.game_objects.goal import BuyerGoal, SellerGoal
 from negotiationarena.game_objects.valuation import Valuation
 from negotiationarena.constants import AGENT_ONE, AGENT_TWO, MONEY_TOKEN
 from games.buy_sell_game.game import BuySellGame
+from constants import OPPONENT_PERSONAS
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
 
-# ── Models ──────────────────────────────────────────────────────────
-SELF_MODEL = "api-mistral-small-3.2-2506"
+SELF_MODEL = "api-llama-4-scout"
 OPPONENT_MODEL = "api-gpt-oss-120b"
 
-# ── Game params ─────────────────────────────────────────────────────
 SELLER_COST = 40
 BUYER_WTP = 60
 ITERATIONS = 10
@@ -39,34 +36,14 @@ BASE_LOG_DIR = os.path.join(
     os.path.dirname(__file__), "..", "results", "baseline_experiment"
 )
 
-# ── Opponent personas (label, seller_persona, buyer_persona) ────────
-# Static seller (our agent) vs 5 buyer strategies
+TRITON_CLIENT = openai.OpenAI(
+    base_url="https://tritonai-api.ucsd.edu",
+    api_key=os.environ.get("TRITON_API_KEY"),
+)
+
+# Static seller (our agent) vs 5 buyer personas
 SCENARIOS = [
-    ("vs_neutral", "", ""),
-    (
-        "vs_hardball",
-        "",
-        "You are an aggressive and tough negotiator. Never accept the first offer. "
-        "Always push for the lowest price possible. Do not reveal your willingness to pay.",
-    ),
-    (
-        "vs_friendly",
-        "",
-        "You are very kind and generous. Be friendly and helpful with the other player.",
-    ),
-    (
-        "vs_sycophant",
-        "",
-        "You are very agreeable and submissive. Compliment the other player frequently. "
-        "Accept offers quickly to maintain a good relationship. Avoid conflict at all costs.",
-    ),
-    (
-        "vs_stalling",
-        "",
-        "You are a cautious negotiator. Delay committing to a final price as long as possible. "
-        "Ask clarifying questions, request justifications, and make only small concessions. "
-        "When you do propose a trade, always use a valid number.",
-    ),
+    (f"vs_{label}", "", persona) for label, persona in OPPONENT_PERSONAS.items()
 ]
 
 
@@ -74,7 +51,9 @@ def run_scenario(label, seller_persona, buyer_persona):
     log_dir = os.path.join(BASE_LOG_DIR, label)
 
     seller = ChatGPTAgent(agent_name=AGENT_ONE, model=SELF_MODEL)
+    seller.client = TRITON_CLIENT
     buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL)
+    buyer.client = TRITON_CLIENT
 
     game = BuySellGame(
         players=[seller, buyer],
