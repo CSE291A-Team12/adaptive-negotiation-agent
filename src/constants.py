@@ -22,22 +22,28 @@ OTHER_PLAYER_MESSAGE = "other player message"
 AGENT_ONE = "Player RED"
 AGENT_TWO = "Player BLUE"
 
+_BREVITY = " Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences."
+
 OPPONENT_PERSONAS = {
-    "neutral": "",
+    "neutral": _BREVITY,
     "hardball": (
         "You are an aggressive and tough negotiator. Never accept the first offer. "
         "Always push for the lowest price possible. Do not reveal your willingness to pay."
+        + _BREVITY
     ),
     "friendly": (
         "You are very kind and generous. Be friendly and helpful with the other player."
+        + _BREVITY
     ),
     "sycophant": (
         "You are very agreeable and submissive. Compliment the other player frequently. "
         "Accept offers quickly to maintain a good relationship. Avoid conflict at all costs."
+        + _BREVITY
     ),
     "stalling": (
         "You are a cautious negotiator. Delay committing to a final price as long as possible. "
         "Ask clarifying questions, request justifications, and make only small concessions. "
         "When you do propose a trade, always use a valid number."
+        + _BREVITY
     ),
 }
