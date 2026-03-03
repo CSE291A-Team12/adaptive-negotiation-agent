@@ -29,28 +29,26 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
         ]
         self.profiler_model = profiler_model
         self.negotiator_model = negotiator_model
-
         self.profiler_logs = []  # for us to see what profiler agent is responding
 
-        # Both negotiator and profiler use TritonAI with different model IDs
-        self.client = openai.OpenAI(
+        # Single TritonAI client shared by negotiator and profiler (different model IDs)
+        triton = openai.OpenAI(
             base_url="https://tritonai-api.ucsd.edu",
-            api_key=os.environ.get("OPENAI_API_KEY"),
+            api_key=os.environ.get("TRITON_API_KEY"),
         )
+        self.client = triton
+        self.profiler_client = triton
 
-        self.profiler_client = openai.OpenAI(
-            base_url="https://tritonai-api.ucsd.edu",
-            api_key=os.environ.get("OPENAI_API_KEY"),
-        )
+    # openai.OpenAI clients can't be deep-copied; replace with class name
+    # string in copies (used for game state JSON serialization).
+    _CLIENT_ATTRS = frozenset({"client", "profiler_client"})
 
     def __deepcopy__(self, memo):
         cls = self.__class__
         result = cls.__new__(cls)
         memo[id(self)] = result
         for k, v in self.__dict__.items():
-            if k in ("client", "profiler_client"):
-                # Convert to string for serialization (get_state → JSON);
-                # the original agent keeps the live client objects.
+            if k in self._CLIENT_ATTRS:
                 setattr(result, k, v.__class__.__name__)
             else:
                 setattr(result, k, deepcopy(v, memo))
@@ -74,16 +72,10 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
         return response.choices[0].message.content
 
     def run_negotiator(self, instructions):
-        # negotiator prompt but with extra instruction from profiler
         negotiator_prompt_with_instructions = (
             f"{self.negotiator_prompt}\n\n"
             f"Follow strategic instructions from your profiler: {instructions}"
         )
-
-        # DEBUG: inspect what we're sending
-        # print(f"  [DEBUG] Negotiator base_url: {self.client.base_url}")
-        # print(f"  [DEBUG] Negotiator model: {self.negotiator_model}")
-        # print(f"  [DEBUG] HF_TOKEN set: {bool(self.client.api_key)}, starts with: {str(self.client.api_key)[:10]}...")
 
         response = self.client.chat.completions.create(
             model=self.negotiator_model,
