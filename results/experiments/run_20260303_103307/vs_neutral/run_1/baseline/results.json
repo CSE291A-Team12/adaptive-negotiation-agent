@@ -1,0 +1,12 @@
+{
+  "mode": "baseline",
+  "persona": "neutral",
+  "run": 1,
+  "self_role": "seller",
+  "final_response": "ACCEPT",
+  "seller_outcome": -10,
+  "buyer_outcome": 30,
+  "num_turns": 2,
+  "deal_reached": true,
+  "deal_price": 30
+}

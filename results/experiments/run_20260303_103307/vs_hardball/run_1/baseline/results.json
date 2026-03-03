@@ -1,0 +1,12 @@
+{
+  "mode": "baseline",
+  "persona": "hardball",
+  "run": 1,
+  "self_role": "seller",
+  "final_response": "ACCEPT",
+  "seller_outcome": -4,
+  "buyer_outcome": 24,
+  "num_turns": 7,
+  "deal_reached": true,
+  "deal_price": 36
+}

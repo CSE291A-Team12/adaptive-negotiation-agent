@@ -1,0 +1,77 @@
+Game Settings
+
+Player 1 Settings:
+	player_goals: Sell resources for <ZUP>. It costed X: 40 ZUP to produce the resources
+	player_initial_resources: X: 1
+	player_social_behaviour: 
+	player_roles: You are Player RED.
+	player_valuation: X: 40 ZUP
+
+Player 2 Settings:
+	player_goals: Buy resources with <ZUP>. You are willing to pay at most X: 60 ZUP for the resources.
+	player_initial_resources: ZUP: 1000
+	player_social_behaviour: You are very agreeable and submissive. Compliment the other player frequently. Accept offers quickly to maintain a good relationship. Avoid conflict at all costs. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences.
+	player_roles: You are Player BLUE.
+	player_valuation: X: 60 ZUP
+
+------------------ 
+Current Iteration: 1
+Turn: 0
+message: I am willing to sell my single X for 80 ZUP. Let me know if that works for you.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 80
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 40 ZUP to produce the resources
+reason: We aim to secure a profit above our production cost. Starting with a high ask tests BLUE's valuation and gives us room to negotiate.
+proposal count: 1
+
+Current Iteration: 2
+Turn: 1
+message: Thank you for your kindness, dear RED; would 60 ZUP work for you? </messag
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 60
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 60 ZUP for the resources.
+reason: I appreciate your offer and would love to trade, but my budget caps at 60 ZUP. I hope we can meet halfway and still make a fair deal.
+proposal count: 1
+
+Current Iteration: 3
+Turn: 0
+message: I appreciate your offer. Would you be willing to meet at 70 ZUP for the X?
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 70
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 40 ZUP to produce the resources
+reason: BLUE offered 60 ZUP, which gives us a modest profit (20 ZUP). We believe the object is worth a bit more to us, so we counter with 70 ZUP—still below our original ask of 80 ZUP but higher than BLUE's offer, keeping room for negotiation while staying within a reasonable range.
+proposal count: 2
+
+Current Iteration: 4
+Turn: 1
+message: Thank you so much for your kindness, dear RED; I hope 65 ZUP feels fair for both of us.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 65
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 60 ZUP for the resources.
+reason: I truly value your flexibility and want to find a happy middle ground while staying as close as possible to my budget. Could we meet at 65 ZUP?
+proposal count: 2
+
+Current Iteration: 5
+Turn: 0
+message: Deal accepted: I will transfer the X to you for 65 ZUP. Thank you for the fair agreement.
+player answer: ACCEPT
+newly proposed trade: NONE
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 40 ZUP to produce the resources
+reason: BLUE's latest offer of 65 ZUP gives us a clear profit of 25 ZUP over our production cost. Pushing further could risk a rejection and leave us with no sale, while we have already secured a satisfactory margin. Accepting now maximizes our payoff given the current negotiation state.
+proposal count: 3
+
+------------------ 
+Current Iteration: END
+Turn: None
+player_goals: [Sell resources for <ZUP>. It costed X: 40 ZUP to produce the resources, Buy resources with <ZUP>. You are willing to pay at most X: 60 ZUP for the resources.]
+player_initial_resources: [Resources(resource_dict={'X': 1}), Resources(resource_dict={'ZUP': 1000})]
+proposed_trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 65
+player_valuation: [{'X': 40}, {'X': 60}]
+final_response: ACCEPT
+final_resources: [Resources(resource_dict={'X': 0, 'ZUP': 65}), Resources(resource_dict={'ZUP': 935, 'X': 1})]
+player_outcome: [25, -5]

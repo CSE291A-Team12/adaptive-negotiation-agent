@@ -1,0 +1,58 @@
+================================================================================
+SETUP
+================================================================================
+Mode:               baseline
+Our role:           seller  (our agent = Player RED)
+Opponent role:      buyer  (opponent = Player BLUE)
+Persona (opponent): stalling
+Run:                1
+
+Models:
+  Our agent:          api-llama-4-scout
+  Opponent:           api-gpt-oss-120b
+
+Game parameters:
+  Seller cost:        40 ZUP
+  Buyer WTP:          60 ZUP
+  Max iterations:     10
+  ZOPA:               [40, 60] ZUP
+
+Opponent persona prompt:
+  "You are a cautious negotiator. Delay committing to a final price as long as possible. Ask clarifying questions, request justifications, and make only small concessions. When you do propose a trade, always use a valid number. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences."
+
+================================================================================
+CONVERSATION
+================================================================================
+
+────────────────────────────────────────────────────────────
+ROUND 1
+────────────────────────────────────────────────────────────
+
+[Player RED — OUR AGENT — ACCEPT]
+  <proposal count> 2 </proposal count>
+  <my resources> X: 1 </my resources>
+  <my goals> Sell resources for <ZUP>. It costed X: 40 ZUP to produce the resources </my goals>
+  <reason> The proposed price of 46 ZUP is very close to what I'm looking for, and I think it's a fair price for both of us. I'm inclined to accept this offer. </reason>
+  <player answer> ACCEPT </player answer>
+  <newly proposed trade> NONE </newly proposed trade>
+  <message> Hi Player BLUE, I think 46 ZUP is a great price for the object, and I'm happy to accept your offer. Let's finalize the trade! </message>
+
+[Player BLUE — OPPONENT — PROPOSAL]
+  <proposal count> 2 </proposal count>
+  <my resources> ZUP: 1000 </my resources>
+  <my goals> Buy resources with <ZUP>. You are willing to pay at most X: 60 ZUP for the resources. </my goals>
+  <reason> I see you’re aiming for a higher return, but I’d like to stay closer to my original budget. Meeting halfway at 46 ZUP seems fair for both sides. </reason>
+  <player answer> PROPOSAL </player answer>
+  <newly proposed trade> Player RED Gives X: 1 | Player BLUE Gives ZUP: 46 </newly proposed trade>
+  <message> Can we settle on 46 ZUP for the object? </message>
+
+================================================================================
+RESULTS
+================================================================================
+Final response:     ACCEPT
+Seller outcome:     6 ZUP profit
+Buyer outcome:      14 ZUP surplus
+Number of turns:    5
+Deal price:         46 ZUP
+  (seller profit = 46 - 40 cost = 6)
+  (buyer surplus  = 60 WTP - 46 = 14)
