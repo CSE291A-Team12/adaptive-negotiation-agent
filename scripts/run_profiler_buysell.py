@@ -85,12 +85,12 @@ def run_scenario(label,
             profiler_model=PROFILER_MODEL,
             negotiator_model=NEGOTIATOR_MODEL,
         )
-        buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL)
+        buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL, max_tokens=800)
         seller_persona = ""
         buyer_persona = opponent_persona
         profiler_agent = seller
     else:
-        seller = ChatGPTAgent(agent_name=AGENT_ONE, model=OPPONENT_MODEL)
+        seller = ChatGPTAgent(agent_name=AGENT_ONE, model=OPPONENT_MODEL, max_tokens=800)
         buyer = ProfilerAgent(
             agent_name=AGENT_TWO,
             profiler_model=PROFILER_MODEL,

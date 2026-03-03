@@ -52,7 +52,7 @@ def run_scenario(label, seller_persona, buyer_persona):
 
     seller = ChatGPTAgent(agent_name=AGENT_ONE, model=SELF_MODEL)
     seller.client = TRITON_CLIENT
-    buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL)
+    buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL, max_tokens=800)
     buyer.client = TRITON_CLIENT
 
     game = BuySellGame(

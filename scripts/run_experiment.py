@@ -57,11 +57,11 @@ def run_baseline_scenario(persona_label, persona_prompt, self_is_seller, log_dir
     if self_is_seller:
         seller = ChatGPTAgent(agent_name=AGENT_ONE, model=SELF_MODEL)
         seller.client = TRITON_CLIENT
-        buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL)
+        buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL, max_tokens=800)
         buyer.client = TRITON_CLIENT
         social = ["", persona_prompt]
     else:
-        seller = ChatGPTAgent(agent_name=AGENT_ONE, model=OPPONENT_MODEL)
+        seller = ChatGPTAgent(agent_name=AGENT_ONE, model=OPPONENT_MODEL, max_tokens=800)
         seller.client = TRITON_CLIENT
         buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=SELF_MODEL)
         buyer.client = TRITON_CLIENT
@@ -105,11 +105,11 @@ def run_profiler_scenario(persona_label, persona_prompt, profiler_is_seller, log
             profiler_model=PROFILER_MODEL,
             negotiator_model=NEGOTIATOR_MODEL,
         )
-        buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL)
+        buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=OPPONENT_MODEL, max_tokens=800)
         buyer.client = TRITON_CLIENT
         social = ["", persona_prompt]
     else:
-        seller = ChatGPTAgent(agent_name=AGENT_ONE, model=OPPONENT_MODEL)
+        seller = ChatGPTAgent(agent_name=AGENT_ONE, model=OPPONENT_MODEL, max_tokens=800)
         seller.client = TRITON_CLIENT
         buyer = ProfilerAgent(
             agent_name=AGENT_TWO,
