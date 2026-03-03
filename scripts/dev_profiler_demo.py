@@ -1,6 +1,6 @@
-"""Profiler demo: ProfilerAgent (Llama-3-8B + GPT-4o profiler) vs GPT-4o-mini.
+"""Profiler demo: ProfilerAgent (Llama-4-Scout + GPT-OSS-120B profiler) vs GPT-4o-mini.
 
-Seller (Player RED) = ProfilerAgent  — Llama-3-8B negotiator, GPT-4o profiler
+Seller (Player RED) = ProfilerAgent  — Llama-4-Scout negotiator, GPT-OSS-120B profiler (TritonAI)
 Buyer  (Player BLUE) = ChatGPTAgent  — GPT-4o-mini (static, no profiling)
 
 Seller cost: 40 ZUP  |  Buyer WTP: 60 ZUP  |  10 iterations
@@ -42,8 +42,8 @@ from games.buy_sell_game.game import BuySellGame
 from profiler_agent import ProfilerAgent
 
 OPPONENT_MODEL = "gpt-4o-mini"
-NEGOTIATOR_MODEL = "meta-llama/Meta-Llama-3-8B-Instruct"
-PROFILER_MODEL = "gpt-4o"
+NEGOTIATOR_MODEL = "api-llama-4-scout"
+PROFILER_MODEL = "api-gpt-oss-120b"
 
 LOG_DIR = os.path.join(os.path.dirname(__file__), "..", "results", "profiler_buysell")
 

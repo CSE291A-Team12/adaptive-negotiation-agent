@@ -59,23 +59,23 @@ def save_profiler_logs(profiler_agent, log_dir):
     print(f"  Profiler logs saved to {path}")
 
 
-def run_scenario(label, 
+def run_scenario(label,
                  OPPONENT_MODEL,
                  NEGOTIATOR_MODEL,
                  PROFILER_MODEL,
-                 opponent_persona, 
-                 profiler_is_seller=True, 
-                 seller_cost=40, 
-                 buyer_wtp=60, 
+                 opponent_persona,
+                 profiler_is_seller=True,
+                 seller_cost=40,
+                 buyer_wtp=60,
                  iterations = 10,
                  ):
     """
-    label: 
+    label:
     opponent_persona: strategy of opponent
     profiler_is_seller: if profiler is seller or not
     seller's cost: how much it took for seller to make
     buyer_wtp: buyer's willingness to pay
-    iterations: number of back/forth between agents 
+    iterations: number of back/forth between agents
     """
     log_dir = os.path.join(BASE_LOG_DIR, label)
 
@@ -123,7 +123,7 @@ def run_scenario(label,
 
     #save_profiler_logs(profiler_agent, log_dir)
     """
-    IF WE WANT TO SEE THE CONVERSATION 
+    IF WE WANT TO SEE THE CONVERSATION
     f.write("-" * 50 + "\n")
     f.write("CONVERSATION LOG:\n")
 
@@ -137,7 +137,7 @@ def run_scenario(label,
     final = game.game_state[-1]
     summary = final.get("summary", final)
 
-    
+
     return {
         "final_response": summary.get("final_response", "N/A"),
         "seller_outcome": summary.get("player_outcome", [None, None])[0],
@@ -150,20 +150,20 @@ def run_profiler_experiment(log_iteration,
                             opponent_model="api-gpt-oss-120b",
                             self_model="meta-llama/Meta-Llama-3-8B-Instruct",
                             profiler_model = "api-gpt-oss-120b",
-                            seller_cost = 40, 
-                            buyer_wtp = 60, 
+                            seller_cost = 40,
+                            buyer_wtp = 60,
                             max_retries=3,
                             iterations = 10):
     os.makedirs(BASE_LOG_DIR, exist_ok=True)
-    
+
     OPPONENT_MODEL = opponent_model
     NEGOTIATOR_MODEL = self_model
     PROFILER_MODEL = profiler_model
 
     for _ in range(1):
-        log_file_name = f"run_summary_{log_iteration}.log" 
+        log_file_name = f"run_summary_{log_iteration}.log"
         log_file_path = os.path.join(BASE_LOG_DIR, log_file_name)
-        
+
         results = {}
 
         for persona_label, persona_prompt in OPPONENT_PERSONAS.items():
@@ -178,10 +178,10 @@ def run_profiler_experiment(log_iteration,
                                               OPPONENT_MODEL,
                                               NEGOTIATOR_MODEL,
                                               PROFILER_MODEL,
-                                              persona_prompt, 
-                                              profiler_is_seller, 
-                                              seller_cost=seller_cost, 
-                                              buyer_wtp=buyer_wtp, 
+                                              persona_prompt,
+                                              profiler_is_seller,
+                                              seller_cost=seller_cost,
+                                              buyer_wtp=buyer_wtp,
                                               iterations = iterations)
 
                         with open(log_file_path, "a") as f:
