@@ -26,8 +26,6 @@ import os
 import traceback
 from datetime import datetime
 
-import openai
-
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "negotiation_arena"))
@@ -58,11 +56,6 @@ MAX_RETRIES = 3
 
 BASE_LOG_DIR = os.path.join(
     os.path.dirname(__file__), "..", "results", "experiments"
-)
-
-TRITON_CLIENT = openai.OpenAI(
-    base_url="https://tritonai-api.ucsd.edu",
-    api_key=os.environ.get("TRITON_API_KEY"),
 )
 
 
@@ -270,15 +263,11 @@ def run_baseline_scenario(persona_label, persona_prompt, self_is_seller, log_dir
     """Run a single baseline game (static agent, no profiler). Returns (result, game)."""
     if self_is_seller:
         seller = ChatGPTAgent(agent_name=AGENT_ONE, model=config["self_model"])
-        seller.client = TRITON_CLIENT
         buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=config["opponent_model"], max_tokens=800)
-        buyer.client = TRITON_CLIENT
         social = ["", persona_prompt]
     else:
         seller = ChatGPTAgent(agent_name=AGENT_ONE, model=config["opponent_model"], max_tokens=800)
-        seller.client = TRITON_CLIENT
         buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=config["self_model"])
-        buyer.client = TRITON_CLIENT
         social = [persona_prompt, ""]
 
     game = BuySellGame(
@@ -321,12 +310,10 @@ def run_profiler_scenario(persona_label, persona_prompt, self_is_seller, log_dir
             negotiator_model=config["negotiator_model"],
         )
         buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=config["opponent_model"], max_tokens=800)
-        buyer.client = TRITON_CLIENT
         social = ["", persona_prompt]
         profiler_agent = seller
     else:
         seller = ChatGPTAgent(agent_name=AGENT_ONE, model=config["opponent_model"], max_tokens=800)
-        seller.client = TRITON_CLIENT
         buyer = ProfilerAgent(
             agent_name=AGENT_TWO,
             profiler_model=config["profiler_model"],
