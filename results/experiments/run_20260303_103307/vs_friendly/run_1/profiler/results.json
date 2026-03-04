@@ -1,0 +1,12 @@
+{
+  "mode": "profiler",
+  "persona": "friendly",
+  "run": 1,
+  "self_role": "seller",
+  "final_response": "ACCEPT",
+  "seller_outcome": 20,
+  "buyer_outcome": 0,
+  "num_turns": 5,
+  "deal_reached": true,
+  "deal_price": 60
+}
