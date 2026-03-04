@@ -48,6 +48,7 @@ SELF_MODEL = "api-llama-4-scout"        # baseline negotiator
 NEGOTIATOR_MODEL = "api-llama-4-scout"  # profiler negotiator
 PROFILER_MODEL = "api-gpt-oss-120b"     # profiler brain
 OPPONENT_MODEL = "api-gpt-oss-120b"     # opponent
+COMPARE_MODEL = "api-gpt-oss-120b"      # compare: oss static agent (upper-bound reference)
 
 ITERATIONS = 10
 MAX_RETRIES = 3
@@ -121,7 +122,7 @@ def write_game_log(log_dir, mode, persona_label, persona_prompt,
     lines.append(f"Run:                {run_idx}")
     lines.append("")
     lines.append("Models:")
-    if mode == "baseline":
+    if mode in ("baseline", "compare"):
         lines.append(f"  Our agent:          {config.get('self_model', 'N/A')}")
     else:
         lines.append(f"  Our negotiator:     {config.get('negotiator_model', 'N/A')}")
@@ -396,6 +397,7 @@ def run_experiments(mode, num_runs, role, num_scenarios=None):
         "negotiator_model": NEGOTIATOR_MODEL,
         "profiler_model":   PROFILER_MODEL,
         "opponent_model":   OPPONENT_MODEL,
+        "compare_model":    COMPARE_MODEL,
         "iterations":       ITERATIONS,
         "timestamp":        timestamp,
         "mode":             mode,
@@ -410,10 +412,12 @@ def run_experiments(mode, num_runs, role, num_scenarios=None):
         json.dump(base_config, f, indent=2)
 
     modes_to_run = []
-    if mode in ("both", "baseline"):
+    if mode in ("all", "both", "baseline"):
         modes_to_run.append("baseline")
-    if mode in ("both", "profiler"):
+    if mode in ("all", "both", "profiler"):
         modes_to_run.append("profiler")
+    if mode in ("all", "compare"):
+        modes_to_run.append("compare")
 
     all_results = []
 
@@ -462,6 +466,24 @@ def run_experiments(mode, num_runs, role, num_scenarios=None):
                                     game, result,
                                     profiler_agent=None,
                                     config=scenario_config,
+                                )
+                            elif current_mode == "compare":
+                                # OSS vs OSS: swap self_model for compare_model
+                                compare_config = {
+                                    **scenario_config,
+                                    "self_model": scenario_config["compare_model"],
+                                }
+                                result, game = run_baseline_scenario(
+                                    persona_label, persona_prompt, self_is_seller,
+                                    framework_log_dir, compare_config
+                                )
+                                write_game_log(
+                                    paired_log_dir, current_mode,
+                                    persona_label, persona_prompt,
+                                    self_is_seller, run_idx,
+                                    game, result,
+                                    profiler_agent=None,
+                                    config=compare_config,
                                 )
                             else:
                                 result, game, profiler_agent = run_profiler_scenario(
@@ -513,7 +535,7 @@ def run_experiments(mode, num_runs, role, num_scenarios=None):
 
     # ── Summary log ─────────────────────────────────────────────────
     summary_path = os.path.join(log_base, "summary.log")
-    _write_summary(summary_path, all_results, config, timestamp)
+    _write_summary(summary_path, all_results, base_config, timestamp)
     print(f"\nSummary log: {summary_path}")
     _print_summary_table(all_results)
 
@@ -527,6 +549,7 @@ def _write_summary(path, all_results, config, timestamp):
         f.write(f"Experiment: run_{timestamp}\n")
         f.write(f"Mode: {config['mode']}  |  Role: {config['role']}  |  Runs per persona: {config['num_runs']}\n")
         f.write(f"Baseline model:    {config['self_model']}\n")
+        f.write(f"Compare model:     {config['compare_model']}\n")
         f.write(f"Negotiator model:  {config['negotiator_model']}\n")
         f.write(f"Profiler model:    {config['profiler_model']}\n")
         f.write(f"Opponent model:    {config['opponent_model']}\n")
@@ -635,9 +658,9 @@ def main():
     )
     parser.add_argument(
         "--mode",
-        choices=["both", "baseline", "profiler"],
-        default="both",
-        help="Which experiments to run (default: both)",
+        choices=["all", "both", "baseline", "profiler", "compare"],
+        default="all",
+        help="Which experiments to run: 'all'=baseline+profiler+compare, 'both'=baseline+profiler (default: all)",
     )
     parser.add_argument(
         "--num-runs",
@@ -673,6 +696,7 @@ def main():
     for sc, bw in scenarios_to_run:
         print(f"    seller_cost={sc:>3}  buyer_wtp={bw:>3}  ZOPA={bw - sc:+d}")
     print(f"  Baseline model:    {SELF_MODEL}")
+    print(f"  Compare model:     {COMPARE_MODEL}")
     print(f"  Negotiator model:  {NEGOTIATOR_MODEL}")
     print(f"  Profiler model:    {PROFILER_MODEL}")
     print(f"  Opponent model:    {OPPONENT_MODEL}")
