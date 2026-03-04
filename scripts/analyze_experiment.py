@@ -17,7 +17,6 @@ import json
 import math
 import os
 import sys
-from collections import defaultdict
 from pathlib import Path
 
 BASE_RESULTS_DIR = Path(__file__).parent.parent / "results" / "experiments"
