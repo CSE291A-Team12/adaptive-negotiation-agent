@@ -24,6 +24,7 @@ import json
 import sys
 import os
 import traceback
+from collections import defaultdict
 from datetime import datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -546,7 +547,6 @@ def run_experiments(mode, num_runs, role, num_scenarios=None):
 
 
 def _write_summary(path, all_results, config, timestamp):
-    from collections import defaultdict
 
     with open(path, "w") as f:
         f.write(f"Experiment: run_{timestamp}\n")
