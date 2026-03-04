@@ -316,7 +316,7 @@ def analyze(run_dir, save_csv=False):
         sc_val  = r.get("seller_cost")
         bw_val  = r.get("buyer_wtp")
         our_out = r.get("seller_outcome") if self_role == "seller" else r.get("buyer_outcome")
-        pct     = surplus_pct(our_out, sc_val, bw_val) if sc_val is not None else None
+        pct     = surplus_pct(our_out, sc_val, bw_val) if sc_val is not None and bw_val is not None else None
         pct_str = f"{pct:+.0f}%" if pct is not None else "N/A"
         s_out   = f"{r['seller_outcome']:>+6}" if r.get("seller_outcome") is not None else f"{'N/A':>6}"
         b_out   = f"{r['buyer_outcome']:>+6}" if r.get("buyer_outcome") is not None else f"{'N/A':>6}"
