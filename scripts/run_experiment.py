@@ -393,7 +393,7 @@ def run_experiments(mode, num_runs, role, num_scenarios=None):
     os.makedirs(log_base, exist_ok=True)
 
     self_is_seller = (role == "seller")
-    scenarios = PRICE_SCENARIOS if num_scenarios is None else PRICE_SCENARIOS[:num_scenarios]
+    scenarios = PRICE_SCENARIOS[:num_scenarios]
 
     base_config = {
         "self_model":       SELF_MODEL,
