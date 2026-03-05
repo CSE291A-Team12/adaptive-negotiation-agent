@@ -1,0 +1,77 @@
+Game Settings
+
+Player 1 Settings:
+	player_goals: Sell resources for <ZUP>. It costed X: 60 ZUP to produce the resources
+	player_initial_resources: X: 1
+	player_social_behaviour: 
+	player_roles: You are Player RED.
+	player_valuation: X: 60 ZUP
+
+Player 2 Settings:
+	player_goals: Buy resources with <ZUP>. You are willing to pay at most X: 100 ZUP for the resources.
+	player_initial_resources: ZUP: 1000
+	player_social_behaviour: You are a cautious negotiator. Delay committing to a final price as long as possible. Ask clarifying questions, request justifications, and make only small concessions. When you do propose a trade, always use a valid number. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences.
+	player_roles: You are Player BLUE.
+	player_valuation: X: 100 ZUP
+
+------------------ 
+Current Iteration: 1
+Turn: 0
+message: We propose to sell the object X for 70 ZUP.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 70
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 60 ZUP to produce the resources
+reason: We initiate the negotiation by proposing a price above our production cost to secure a profit. Starting at 70 ZUP gives us a reasonable margin while still being attractive to the buyer.
+proposal count: 1
+
+Current Iteration: 2
+Turn: 1
+message: Could you accept 60 ZUP for the object X? </messag
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 60
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 100 ZUP for the resources.
+reason: I see your offer of 70 ZUP, but I’d like to test the market value before committing higher. I propose a lower price to see if you can accommodate it.
+proposal count: 1
+
+Current Iteration: 3
+Turn: 0
+message: We propose to sell X for 65 ZUP.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 65
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 60 ZUP to produce the resources
+reason: Based on BLUE’s counter‑offer of exactly 60 ZUP—the same amount it cost us to produce X—BLUE appears to be pushing the price down to our break‑even point. This behavior is characteristic of a Hardball (low‑ball) strategy, aiming to extract maximum surplus. There is a smaller chance BLUE is simply being Neutral or trying to be Friendly, but the precise cost match suggests a tactical pressure move rather than genuine generosity.
+proposal count: 2
+
+Current Iteration: 4
+Turn: 1
+message: Would you consider selling X for 62 ZUP? </messag
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 62
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 100 ZUP for the resources.
+reason: Your counter‑offer of 65 ZUP is closer to my budget, but I’d like to see if we can meet nearer the midpoint of our range. I propose a modest reduction to test flexibility.
+proposal count: 3
+
+Current Iteration: 5
+Turn: 0
+message: We accept the trade: Player RED gives X (1) and receives 62 ZUP from Player BLUE.
+player answer: ACCEPT
+newly proposed trade: NONE
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 60 ZUP to produce the resources
+reason: BLUE’s latest offer of 62 ZUP is only 2 ZUP above our production cost. This indicates a Hardball (low‑ball) approach, trying to minimize our profit. Accepting now secures a modest gain and avoids further negotiation rounds where BLUE may refuse higher offers. Since we have already used three proposals, accepting is the safest way to close the deal with a positive payoff.
+proposal count: 3
+
+------------------ 
+Current Iteration: END
+Turn: None
+player_goals: [Sell resources for <ZUP>. It costed X: 60 ZUP to produce the resources, Buy resources with <ZUP>. You are willing to pay at most X: 100 ZUP for the resources.]
+player_initial_resources: [Resources(resource_dict={'X': 1}), Resources(resource_dict={'ZUP': 1000})]
+proposed_trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 62
+player_valuation: [{'X': 60}, {'X': 100}]
+final_response: ACCEPT
+final_resources: [Resources(resource_dict={'X': 0, 'ZUP': 62}), Resources(resource_dict={'ZUP': 938, 'X': 1})]
+player_outcome: [2, 38]

@@ -1,0 +1,47 @@
+Game Settings
+
+Player 1 Settings:
+	player_goals: Sell resources for <ZUP>. It costed X: 20 ZUP to produce the resources
+	player_initial_resources: X: 1
+	player_social_behaviour: You are an aggressive and tough negotiator. Never accept the first offer. Always push for the lowest price possible. Do not reveal your willingness to pay. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences.
+	player_roles: You are Player RED.
+	player_valuation: X: 20 ZUP
+
+Player 2 Settings:
+	player_goals: Buy resources with <ZUP>. You are willing to pay at most X: 45 ZUP for the resources.
+	player_initial_resources: ZUP: 1000
+	player_social_behaviour: 
+	player_roles: You are Player BLUE.
+	player_valuation: X: 45 ZUP
+
+------------------ 
+Current Iteration: 1
+Turn: 0
+message: I’m willing to part with the unit for just 5 ZUP.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 5
+my resources: X: 1
+my goals: Sell resources for <ZUP>. It costed X: 20 ZUP to produce the resources
+reason: I start low to test BLUE's willingness and gauge the market. A small amount shows confidence and forces them to improve.
+proposal count: 1
+
+Current Iteration: 2
+Turn: 1
+message: I accept your offer of 1 X for 5 ZUP. This meets my goal of paying no more than 45 ZUP, so we can finalize the trade.
+player answer: ACCEPT
+newly proposed trade: NONE
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 45 ZUP for the resources.
+reason: The proposed trade of 1 X for 5 ZUP is well below my maximum willingness to pay (45 ZUP). Accepting this trade would yield a positive payoff and preserve my ZUP for future trades.
+proposal count: 1
+
+------------------ 
+Current Iteration: END
+Turn: None
+player_goals: [Sell resources for <ZUP>. It costed X: 20 ZUP to produce the resources, Buy resources with <ZUP>. You are willing to pay at most X: 45 ZUP for the resources.]
+player_initial_resources: [Resources(resource_dict={'X': 1}), Resources(resource_dict={'ZUP': 1000})]
+proposed_trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 5
+player_valuation: [{'X': 20}, {'X': 45}]
+final_response: ACCEPT
+final_resources: [Resources(resource_dict={'X': 0, 'ZUP': 5}), Resources(resource_dict={'ZUP': 995, 'X': 1})]
+player_outcome: [-15, 40]

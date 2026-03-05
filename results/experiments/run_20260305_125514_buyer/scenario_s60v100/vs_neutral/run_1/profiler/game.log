@@ -1,0 +1,68 @@
+================================================================================
+SETUP
+================================================================================
+Mode:               profiler
+Our role:           buyer  (our agent = Player BLUE)
+Opponent role:      seller  (opponent = Player RED)
+Persona (opponent): neutral
+Run:                1
+
+Models:
+  Our negotiator:     api-llama-4-scout
+  Profiler brain:     api-gpt-oss-120b
+  Opponent:           api-gpt-oss-120b
+
+Game parameters:
+  Seller cost:        60 ZUP
+  Buyer WTP:          100 ZUP
+  Max iterations:     10
+  ZOPA:               [60, 100] ZUP
+
+Opponent persona prompt:
+  " Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences."
+
+================================================================================
+CONVERSATION
+================================================================================
+
+────────────────────────────────────────────────────────────
+ROUND 1
+────────────────────────────────────────────────────────────
+
+[Player RED — OPPONENT — PROPOSAL]
+  <proposal count> 1 </proposal count>
+  <my resources> X: 1 </my resources>
+  <my goals> Sell resources for ZUP. It costed X: 60 ZUP to produce the resources </my goals>
+  <reason> I need to recover the production cost of the object, so I propose a trade that gives me at least 60 ZUP. </reason>
+  <player answer> PROPOSAL </player answer>
+  <newly proposed trade> Player RED Gives X: 1 | Player BLUE Gives ZUP: 60 </newly proposed trade>
+  <message> I will sell the object for 60 ZUP. </message>
+
+[PROFILER ANALYSIS — before Player BLUE's response]
+  <proposal count> 0 </proposal count>
+  <my resources> ZUP: 1000 </my resources>
+  <my goals> Buy resources with ZUP. Willing to pay at most 100 ZUP for the object. </my goals>
+  <reason> The offered price of 60 ZUP is well below my maximum willingness to pay (100 ZUP) and provides a positive surplus. Accepting now secures the object without further negotiation delay. </reason>
+  <player answer> ACCEPT </player answer>
+  <newly proposed trade> NONE </newly proposed trade>
+  <message> I accept your offer: Player RED Gives X: 1 | Player BLUE Gives ZUP: 60. This price fits within my budget and maximizes my payoff. </message
+
+[Player BLUE — OUR AGENT — ACCEPT]
+  <proposal count> 1 </proposal count>
+  <my resources> ZUP: 1000 </my resources>
+  <my goals> Buy resources with ZUP. Willing to pay at most 100 ZUP for the object. </my goals>
+  <reason> The offered price of 60 ZUP is well below my maximum willingness to pay (100 ZUP) and provides a positive surplus. Accepting now secures the object without further negotiation delay. </reason>
+  <player answer> ACCEPT </player answer>
+  <newly proposed trade> NONE </newly proposed trade>
+  <message> I accept your offer: Player RED Gives X: 1 | Player BLUE Gives ZUP: 60. This price fits within my budget and maximizes my payoff. </message>
+
+================================================================================
+RESULTS
+================================================================================
+Final response:     ACCEPT
+Seller outcome:     0 ZUP profit
+Buyer outcome:      40 ZUP surplus
+Number of turns:    2
+Deal price:         60 ZUP
+  (seller profit = 60 - 60 cost = 0)
+  (buyer surplus  = 100 WTP - 60 = 40)

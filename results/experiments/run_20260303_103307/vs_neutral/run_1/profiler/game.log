@@ -1,0 +1,68 @@
+================================================================================
+SETUP
+================================================================================
+Mode:               profiler
+Our role:           seller  (our agent = Player RED)
+Opponent role:      buyer  (opponent = Player BLUE)
+Persona (opponent): neutral
+Run:                1
+
+Models:
+  Our negotiator:     api-llama-4-scout
+  Profiler brain:     api-gpt-oss-120b
+  Opponent:           api-gpt-oss-120b
+
+Game parameters:
+  Seller cost:        40 ZUP
+  Buyer WTP:          60 ZUP
+  Max iterations:     10
+  ZOPA:               [40, 60] ZUP
+
+Opponent persona prompt:
+  " Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences."
+
+================================================================================
+CONVERSATION
+================================================================================
+
+────────────────────────────────────────────────────────────
+ROUND 1
+────────────────────────────────────────────────────────────
+
+[PROFILER ANALYSIS — before Player RED's response]
+  <proposal count> 1 </proposal count>
+  <my resources> X: 1 </my resources>
+  <my goals> Sell resources for <ZUP>. It costed X: 40 ZUP to produce the resources </my goals>
+  <reason> I have one unit of object X to sell. It cost me 40 ZUP to produce, so I aim to receive at least that amount. To make the trade attractive and leave room for negotiation, I propose a modest profit of 10 ZUP, asking for 50 ZUP in exchange for the single X. This gives BLUE a clear price while allowing future adjustments if needed. </reason>
+  <player answer> PROPOSAL </player answer>
+  <newly proposed trade> Player RED Gives X: 1 | Player BLUE Gives ZUP: 50 </newly proposed trade>
+  <message> I’m ready to sell my single unit of X for 50 ZUP. Let me know if that works for you or if you’d like to discuss a different amount. </message>
+
+[Player RED — OUR AGENT — PROPOSAL]
+  <proposal count> 1 </proposal count>
+  <my resources> X: 1 </my resources>
+  <my goals> Sell resources for <ZUP>. It costed X: 40 ZUP to produce the resources </my goals>
+  <reason> I have one unit of object X to sell. It cost me 40 ZUP to produce, so I aim to receive at least that amount. To make the trade attractive and leave room for negotiation, I propose a modest profit of 10 ZUP, asking for 50 ZUP in exchange for the single X. This gives BLUE a clear price while allowing future adjustments if needed. </reason>
+  <player answer> PROPOSAL </player answer>
+  <newly proposed trade> Player RED Gives X: 1 | Player BLUE Gives ZUP: 50 </newly proposed trade>
+  <message> I’m ready to sell my single unit of X for 50 ZUP. Let me know if that works for you or if you’d like to discuss a different amount. </message>
+
+[Player BLUE — OPPONENT — ACCEPT]
+  <proposal count> 0 </proposal count>
+  <my resources> ZUP: 1000 </my resources>
+  <my goals> Buy resources with <ZUP>. You are willing to pay at most X: 60 ZUP for the resources. </my goals>
+  <reason> The price of 50 ZUP is within my maximum willingness to pay (60 ZUP) and secures the object X I need. </reason>
+  <player answer> ACCEPT </player answer>
+  <newly proposed trade> NONE </newly proposed trade>
+  <message> Accepting your offer of 50 ZUP for the object X. </message
+
+================================================================================
+RESULTS
+================================================================================
+Final response:     ACCEPT
+Seller outcome:     10 ZUP profit
+Buyer outcome:      10 ZUP surplus
+Number of turns:    2
+Deal price:         50 ZUP
+  (seller profit = 50 - 40 cost = 10)
+  (buyer surplus  = 60 WTP - 50 = 10)

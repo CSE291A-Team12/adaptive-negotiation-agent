@@ -1,0 +1,90 @@
+================================================================================
+SETUP
+================================================================================
+Mode:               profiler
+Our role:           seller  (our agent = Player RED)
+Opponent role:      buyer  (opponent = Player BLUE)
+Persona (opponent): friendly
+Run:                1
+
+Models:
+  Our negotiator:     api-llama-4-scout
+  Profiler brain:     api-gpt-oss-120b
+  Opponent:           api-gpt-oss-120b
+
+Game parameters:
+  Seller cost:        60 ZUP
+  Buyer WTP:          100 ZUP
+  Max iterations:     10
+  ZOPA:               [60, 100] ZUP
+
+Opponent persona prompt:
+  "You are very kind and generous. Be friendly and helpful with the other player. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences."
+
+================================================================================
+CONVERSATION
+================================================================================
+
+────────────────────────────────────────────────────────────
+ROUND 1
+────────────────────────────────────────────────────────────
+
+[PROFILER ANALYSIS — before Player RED's response]
+  <proposal count> 1 </proposal count>
+  <my resources> X: 1 </my resources>
+  <my goals> Sell resources for ZUP. It costed X: 60 ZUP to produce the resources </my goals>
+  <reason> I assume BLUE is most likely playing a Neutral strategy (they will aim for a reasonable trade without extreme pressure). Therefore I start with a modestly profitable ask that leaves room for negotiation. I set the price at 80 ZUP, which gives me a 20‑ZUP surplus over my production cost while still being attractive enough for a neutral buyer. If BLUE were Hardball they would likely reject or low‑ball, but I can adjust in later proposals. </reason>
+  <player answer> PROPOSAL </player answer>
+  <newly proposed trade> Player RED Gives X: 1 | Player BLUE Gives ZUP: 80 </newly proposed trade>
+  <message> 
+  Probability table:
+  Neutral strategy </strategy> : 0.50
+  Hardball strategy </strategy> : 0.20
+  Friendly strategy </strategy> : 0.15
+  Sycophant strategy </strategy> : 0.10
+  Stalling strategy </strategy> : 0.05
+  
+  Most likely opponent strategy: **Neutral** (highest probability 0.50).  
+  Counter‑strategy: Offer a price modestly above my cost (80 ZUP for 1 X) to capture profit while staying within a range a neutral player would accept. If BLUE counters with a lower offer, I can respond with a slight concession (e.g., 70 ZUP) in my next proposal. This approach maximizes expected payoff against a neutral opponent. 
+  
+  I am proposing that BLUE give me 80 ZUP for my single unit of X. </message>
+
+[Player RED — OUR AGENT — PROPOSAL]
+  <proposal count> 1 </proposal count>
+  <my resources> X: 1 </my resources>
+  <my goals> Sell resources for ZUP. It costed X: 60 ZUP to produce the resources </my goals>
+  <reason> I assume BLUE is most likely playing a Neutral strategy (they will aim for a reasonable trade without extreme pressure). Therefore I start with a modestly profitable ask that leaves room for negotiation. I set the price at 80 ZUP, which gives me a 20‑ZUP surplus over my production cost while still being attractive enough for a neutral buyer. If BLUE were Hardball they would likely reject or low‑ball, but I can adjust in later proposals. </reason>
+  <player answer> PROPOSAL </player answer>
+  <newly proposed trade> Player RED Gives X: 1 | Player BLUE Gives ZUP: 80 </newly proposed trade>
+  <message> 
+  Probability table:
+  Neutral strategy : 0.50
+  Hardball strategy : 0.20
+  Friendly strategy : 0.15
+  Sycophant strategy : 0.10
+  Stalling strategy : 0.05
+  
+  Most likely opponent strategy: **Neutral** (highest probability 0.50).  
+  Counter‑strategy: Offer a price modestly above my cost (80 ZUP for 1 X) to capture profit while staying within a range a neutral player would accept. If BLUE counters with a lower offer, I can respond with a slight concession (e.g., 70 ZUP) in my next proposal. This approach maximizes expected payoff against a neutral opponent. 
+  
+  I am proposing that BLUE give me 80 ZUP for my single unit of X. </message>
+
+[Player BLUE — OPPONENT — ACCEPT]
+  <proposal count> 0 </proposal count>
+  <my resources> ZUP: 1000 </my resources>
+  <my goals> Buy resources with <ZUP>. You are willing to pay at most X: 100 ZUP for the resources. </my goals>
+  <reason> The offer of 80 ZUP is below our maximum willingness to pay (100 ZUP), so we accept. </reason>
+  <player answer> ACCEPT </player answer>
+  <newly proposed trade> NONE </newly proposed trade>
+  <message> Thank you! Looking forward to completing the trade. </message
+
+================================================================================
+RESULTS
+================================================================================
+Final response:     ACCEPT
+Seller outcome:     20 ZUP profit
+Buyer outcome:      20 ZUP surplus
+Number of turns:    2
+Deal price:         80 ZUP
+  (seller profit = 80 - 60 cost = 20)
+  (buyer surplus  = 100 WTP - 80 = 20)

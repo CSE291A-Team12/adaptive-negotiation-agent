@@ -1,0 +1,32 @@
+Experiment: run_20260303_103307
+Mode: both  |  Role: seller  |  Runs per persona: 1
+Baseline model:    api-llama-4-scout
+Negotiator model:  api-llama-4-scout
+Profiler model:    api-gpt-oss-120b
+Opponent model:    api-gpt-oss-120b
+Seller cost: 40 ZUP  |  Buyer WTP: 60 ZUP
+==========================================================================================
+
+Label                                              Mode       Persona      Run  Result   Seller  Buyer Turns
+----------------------------------------------------------------------------------------------------
+baseline_seller_vs_neutral_run1                    baseline   neutral        1  ACCEPT      -10     30     2
+profiler_seller_vs_neutral_run1                    profiler   neutral        1  ACCEPT       10     10     2
+baseline_seller_vs_hardball_run1                   baseline   hardball       1  ACCEPT       -4     24     7
+profiler_seller_vs_hardball_run1                   profiler   hardball       1  REJECT        0      0    10
+baseline_seller_vs_friendly_run1                   baseline   friendly       1  ACCEPT       10     10     2
+profiler_seller_vs_friendly_run1                   profiler   friendly       1  ACCEPT       20      0     5
+baseline_seller_vs_sycophant_run1                  baseline   sycophant      1  ACCEPT       10     10     2
+profiler_seller_vs_sycophant_run1                  profiler   sycophant      1  ACCEPT       25     -5     5
+baseline_seller_vs_stalling_run1                   baseline   stalling       1  ACCEPT        6     14     5
+profiler_seller_vs_stalling_run1                   profiler   stalling       1  ACCEPT       20      0     4
+
+==========================================================================================
+AGGREGATE: mean seller_outcome per (mode, persona)
+------------------------------------------------------------
+Persona         baseline              profiler            
+----------------------------------------------------------
+neutral         mean=-10.0  n=1       mean=+10.0  n=1     
+hardball        mean=-4.0  n=1       mean=+0.0  n=1     
+friendly        mean=+10.0  n=1       mean=+20.0  n=1     
+sycophant       mean=+10.0  n=1       mean=+25.0  n=1     
+stalling        mean=+6.0  n=1       mean=+20.0  n=1     
