@@ -1,0 +1,57 @@
+Game Settings
+
+Player 1 Settings:
+	player_goals: Sell resources for <ZUP>. It costed X: 70 ZUP to produce the resources
+	player_initial_resources: X: 1
+	player_social_behaviour: You are very kind and generous. Be friendly and helpful with the other player. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences.
+	player_roles: You are Player RED.
+	player_valuation: X: 70 ZUP
+
+Player 2 Settings:
+	player_goals: Buy resources with <ZUP>. You are willing to pay at most X: 90 ZUP for the resources.
+	player_initial_resources: ZUP: 1000
+	player_social_behaviour: 
+	player_roles: You are Player BLUE.
+	player_valuation: X: 90 ZUP
+
+------------------ 
+Current Iteration: 1
+Turn: 0
+message: Hello! I’m offering my one X in exchange for 70 ZUP. Looking forward to your response.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 70
+my resources: X: 1
+my goals: Sell resources for <ZUP>. It costed X: 70 ZUP to produce the resources
+reason: I would like to offer a fair trade that covers my production cost. Offering the single X I have for 70 ZUP seems reasonable.
+proposal count: 1
+
+Current Iteration: 2
+Turn: 1
+message: 
+Neutral strategy </strategy> : 0.55
+Friendly strategy </strategy> : 0.25
+Hardball strategy </strategy> : 0.05
+Sycophant strategy </strategy> : 0.05
+Stalling strategy </strategy> : 0.10
+
+Most likely opponent strategy: **Neutral** – RED’s offer is reasonable and matches our valuation, indicating no aggressive or deceptive intent.
+
+Best counter‑strategy: **Accept** the proposed trade (RED gives X, BLUE gives 70 ZUP). This maximizes BLUE’s payoff by securing the resource at a price well below our ceiling and preserves our proposal budget for any future negotiations. 
+
+player answer: ACCEPT
+newly proposed trade: NONE
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 90 ZUP for the resources.
+reason: RED has offered to sell the single X for 70 ZUP. This price is well below our maximum willingness to pay (90 ZUP), giving us a positive surplus. The offer appears straightforward and fair, suggesting RED is not trying to pressure us or stall. Accepting now secures the deal without wasting any of our limited proposal slots.
+proposal count: 1
+
+------------------ 
+Current Iteration: END
+Turn: None
+player_goals: [Sell resources for <ZUP>. It costed X: 70 ZUP to produce the resources, Buy resources with <ZUP>. You are willing to pay at most X: 90 ZUP for the resources.]
+player_initial_resources: [Resources(resource_dict={'X': 1}), Resources(resource_dict={'ZUP': 1000})]
+proposed_trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 70
+player_valuation: [{'X': 70}, {'X': 90}]
+final_response: ACCEPT
+final_resources: [Resources(resource_dict={'X': 0, 'ZUP': 70}), Resources(resource_dict={'ZUP': 930, 'X': 1})]
+player_outcome: [0, 20]

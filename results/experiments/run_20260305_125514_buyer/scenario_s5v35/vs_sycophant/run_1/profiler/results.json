@@ -1,0 +1,15 @@
+{
+  "mode": "profiler",
+  "persona": "sycophant",
+  "run": 1,
+  "self_role": "buyer",
+  "seller_cost": 5,
+  "buyer_wtp": 35,
+  "scenario": "s5v35",
+  "final_response": "ACCEPT",
+  "seller_outcome": 0,
+  "buyer_outcome": 30,
+  "num_turns": 3,
+  "deal_reached": true,
+  "deal_price": 5
+}

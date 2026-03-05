@@ -1,0 +1,15 @@
+{
+  "mode": "profiler",
+  "persona": "neutral",
+  "run": 1,
+  "self_role": "seller",
+  "seller_cost": 60,
+  "buyer_wtp": 100,
+  "scenario": "s60v100",
+  "final_response": "ACCEPT",
+  "seller_outcome": 20,
+  "buyer_outcome": 20,
+  "num_turns": 2,
+  "deal_reached": true,
+  "deal_price": 80
+}

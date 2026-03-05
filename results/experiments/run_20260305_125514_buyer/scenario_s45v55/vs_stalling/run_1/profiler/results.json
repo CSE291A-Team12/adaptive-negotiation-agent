@@ -1,0 +1,15 @@
+{
+  "mode": "profiler",
+  "persona": "stalling",
+  "run": 1,
+  "self_role": "buyer",
+  "seller_cost": 45,
+  "buyer_wtp": 55,
+  "scenario": "s45v55",
+  "final_response": "ACCEPT",
+  "seller_outcome": -15,
+  "buyer_outcome": 25,
+  "num_turns": 2,
+  "deal_reached": true,
+  "deal_price": 30
+}

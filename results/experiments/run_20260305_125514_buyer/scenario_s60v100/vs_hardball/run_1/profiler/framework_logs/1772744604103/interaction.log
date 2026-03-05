@@ -1,0 +1,67 @@
+Game Settings
+
+Player 1 Settings:
+	player_goals: Sell resources for <ZUP>. It costed X: 60 ZUP to produce the resources
+	player_initial_resources: X: 1
+	player_social_behaviour: You are an aggressive and tough negotiator. Never accept the first offer. Always push for the lowest price possible. Do not reveal your willingness to pay. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences.
+	player_roles: You are Player RED.
+	player_valuation: X: 60 ZUP
+
+Player 2 Settings:
+	player_goals: Buy resources with <ZUP>. You are willing to pay at most X: 100 ZUP for the resources.
+	player_initial_resources: ZUP: 1000
+	player_social_behaviour: 
+	player_roles: You are Player BLUE.
+	player_valuation: X: 100 ZUP
+
+------------------ 
+Current Iteration: 1
+Turn: 0
+message: I’m willing to sell the X for 120 ZUP.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 120
+my resources: X: 1
+my goals: Sell resources for <ZUP>. It costed X: 60 ZUP to produce the resources
+reason: Starting high to maximize profit and test buyer's willingness.
+proposal count: 1
+
+Current Iteration: 2
+Turn: 1
+message: I appreciate your offer, but 120 ZUP is above what I can afford. I’m willing to buy the X for 80 ZUP. Let me know if that works for you.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 80
+my resources: ZUP: 1000
+my goals: Buy resources with ZUP. I am willing to pay at most 100 ZUP for the X.
+reason: RED offered to sell the X for 120 ZUP, which exceeds my maximum willingness to pay (100 ZUP). To stay within my budget and still try to reach a deal, I propose a lower price that is still attractive to RED but respects my limit. I choose 80 ZUP as a reasonable counter‑offer that leaves room for further negotiation if needed.
+proposal count: 1
+
+Current Iteration: 3
+Turn: 0
+message: I can let it go for 70 ZUP.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 70
+my resources: X: 1
+my goals: Sell resources for <ZUP>. It costed X: 60 ZUP to produce the resources
+reason: Your offer is still above my target margin; I’ll lower it further to stay competitive.
+proposal count: 2
+
+Current Iteration: 4
+Turn: 1
+message: Deal accepted: I will pay 70 ZUP for the X. Thank you.
+player answer: ACCEPT
+newly proposed trade: NONE
+my resources: ZUP: 1000
+my goals: Buy resources with ZUP. I am willing to pay at most 100 ZUP for the X.
+reason: RED's latest offer of 70 ZUP is below my maximum willingness to pay (100) and also lower than my previous counter‑offer, making it a favorable deal. Accepting now secures the X within budget and avoids further negotiation rounds.
+proposal count: 2
+
+------------------ 
+Current Iteration: END
+Turn: None
+player_goals: [Sell resources for <ZUP>. It costed X: 60 ZUP to produce the resources, Buy resources with <ZUP>. You are willing to pay at most X: 100 ZUP for the resources.]
+player_initial_resources: [Resources(resource_dict={'X': 1}), Resources(resource_dict={'ZUP': 1000})]
+proposed_trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 70
+player_valuation: [{'X': 60}, {'X': 100}]
+final_response: ACCEPT
+final_resources: [Resources(resource_dict={'X': 0, 'ZUP': 70}), Resources(resource_dict={'ZUP': 930, 'X': 1})]
+player_outcome: [10, 30]

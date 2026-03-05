@@ -1,0 +1,15 @@
+{
+  "mode": "profiler",
+  "persona": "friendly",
+  "run": 1,
+  "self_role": "seller",
+  "seller_cost": 70,
+  "buyer_wtp": 90,
+  "scenario": "s70v90",
+  "final_response": "REJECT",
+  "seller_outcome": 0,
+  "buyer_outcome": 0,
+  "num_turns": 10,
+  "deal_reached": false,
+  "deal_price": null
+}

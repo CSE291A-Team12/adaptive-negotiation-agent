@@ -1,0 +1,15 @@
+{
+  "mode": "profiler",
+  "persona": "hardball",
+  "run": 1,
+  "self_role": "seller",
+  "seller_cost": 25,
+  "buyer_wtp": 75,
+  "scenario": "s25v75",
+  "final_response": "REJECT",
+  "seller_outcome": 0,
+  "buyer_outcome": 0,
+  "num_turns": 10,
+  "deal_reached": false,
+  "deal_price": null
+}

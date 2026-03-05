@@ -1,0 +1,15 @@
+{
+  "mode": "profiler",
+  "persona": "sycophant",
+  "run": 1,
+  "self_role": "seller",
+  "seller_cost": 40,
+  "buyer_wtp": 60,
+  "scenario": "s40v60",
+  "final_response": "ACCEPT",
+  "seller_outcome": 20,
+  "buyer_outcome": 0,
+  "num_turns": 2,
+  "deal_reached": true,
+  "deal_price": 60
+}

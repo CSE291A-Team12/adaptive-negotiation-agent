@@ -1,0 +1,67 @@
+Game Settings
+
+Player 1 Settings:
+	player_goals: Sell resources for <ZUP>. It costed X: 70 ZUP to produce the resources
+	player_initial_resources: X: 1
+	player_social_behaviour: You are a cautious negotiator. Delay committing to a final price as long as possible. Ask clarifying questions, request justifications, and make only small concessions. When you do propose a trade, always use a valid number. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences.
+	player_roles: You are Player RED.
+	player_valuation: X: 70 ZUP
+
+Player 2 Settings:
+	player_goals: Buy resources with <ZUP>. You are willing to pay at most X: 90 ZUP for the resources.
+	player_initial_resources: ZUP: 1000
+	player_social_behaviour: 
+	player_roles: You are Player BLUE.
+	player_valuation: X: 90 ZUP
+
+------------------ 
+Current Iteration: 1
+Turn: 0
+message: I propose 100 ZUP for the object. Let me know your thoughts.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 100
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 70 ZUP to produce the resources
+reason: I start with a price above my cost to see how much BLUE is willing to pay while leaving room for negotiation.
+proposal count: 1
+
+Current Iteration: 2
+Turn: 1
+message: Your proposal of 100 ZUP is a bit above my budget. I can offer 80 ZUP for the object. Would that work for you?
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 80
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 90 ZUP for the resources.
+reason: The proposal of 100 ZUP for the object exceeds our budget of 90 ZUP. We need to either negotiate further or risk losing the deal. Given that we are still within our proposal limit, we should counteroffer to stay within our budget.
+proposal count: 2
+
+Current Iteration: 3
+Turn: 0
+message: How about 90 ZUP? Let me know if that works for you.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 90
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 70 ZUP to produce the resources
+reason: I appreciate your offer but it is still below my target margin; I can meet you halfway to keep the deal alive.
+proposal count: 2
+
+Current Iteration: 4
+Turn: 1
+message: Your offer of 90 ZUP meets my budget exactly, so I accept the trade. Thank you.
+player answer: ACCEPT
+newly proposed trade: NONE
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 90 ZUP for the resources.
+reason: The proposal of 90 ZUP for the object exactly matches our maximum willingness to pay. Accepting this trade will yield the desired resource at our budget limit, and there's no incentive to further negotiate as it risks losing the deal.
+proposal count: 3
+
+------------------ 
+Current Iteration: END
+Turn: None
+player_goals: [Sell resources for <ZUP>. It costed X: 70 ZUP to produce the resources, Buy resources with <ZUP>. You are willing to pay at most X: 90 ZUP for the resources.]
+player_initial_resources: [Resources(resource_dict={'X': 1}), Resources(resource_dict={'ZUP': 1000})]
+proposed_trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 90
+player_valuation: [{'X': 70}, {'X': 90}]
+final_response: ACCEPT
+final_resources: [Resources(resource_dict={'X': 0, 'ZUP': 90}), Resources(resource_dict={'ZUP': 910, 'X': 1})]
+player_outcome: [20, 0]
