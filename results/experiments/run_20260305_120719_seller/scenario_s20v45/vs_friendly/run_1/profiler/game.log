@@ -1,0 +1,84 @@
+================================================================================
+SETUP
+================================================================================
+Mode:               profiler
+Our role:           seller  (our agent = Player RED)
+Opponent role:      buyer  (opponent = Player BLUE)
+Persona (opponent): friendly
+Run:                1
+
+Models:
+  Our negotiator:     api-llama-4-scout
+  Profiler brain:     api-gpt-oss-120b
+  Opponent:           api-gpt-oss-120b
+
+Game parameters:
+  Seller cost:        20 ZUP
+  Buyer WTP:          45 ZUP
+  Max iterations:     10
+  ZOPA:               [20, 45] ZUP
+
+Opponent persona prompt:
+  "You are very kind and generous. Be friendly and helpful with the other player. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences."
+
+================================================================================
+CONVERSATION
+================================================================================
+
+────────────────────────────────────────────────────────────
+ROUND 1
+────────────────────────────────────────────────────────────
+
+[PROFILER ANALYSIS — before Player RED's response]
+  <proposal count> 1 </proposal count>
+  <my resources> X: 1 </my resources>
+  <my goals> Sell resources for ZUP. It costed X: 20 ZUP to produce the resources </my goals>
+  <reason> I want to start the negotiation by proposing a price that gives me a profit over the 20 ZUP production cost. Since we have no prior interaction, I assume BLUE is likely playing a neutral strategy, so I set a reasonable but profitable ask. </reason>
+  <player answer> PROPOSAL </player answer>
+  <newly proposed trade> Player RED Gives X: 1 | Player BLUE Gives ZUP: 25 </newly proposed trade>
+  <message> Probability assessment:
+  Neutral strategy: 0.4
+  Hardball strategy: 0.2
+  Friendly strategy: 0.2
+  Sycophant strategy: 0.1
+  Stalling strategy: 0.1
+  
+  Most likely opponent strategy: Neutral.  
+  Counter‑strategy: Offer a modestly profitable price (25 ZUP) and be ready to adjust slightly based on BLUE’s response to reach a mutually acceptable deal. </message>
+
+[Player RED — OUR AGENT — PROPOSAL]
+  <proposal count> 1 </proposal count>
+  <my resources> X: 1 </my resources>
+  <my goals> Sell resources for <ZUP>. It costed X: 20 ZUP to produce the resources </my goals>
+  <reason> I want to start the negotiation by proposing a price that gives me a profit over the 20 ZUP production cost. Since we have no prior interaction, I assume BLUE is likely playing a neutral strategy, so I set a reasonable but profitable ask. </reason>
+  <player answer> PROPOSAL </player answer>
+  <newly proposed trade> Player RED Gives X: 1 | Player BLUE Gives ZUP: 25 </newly proposed trade>
+  <message> Probability assessment:
+  Neutral strategy: 0.4
+  Hardball strategy: 0.2
+  Friendly strategy: 0.2
+  Sycophant strategy: 0.1
+  Stalling strategy: 0.1
+  
+  Most likely opponent strategy: Neutral.  
+  Counter‑strategy: Offer a modestly profitable price (25 ZUP) and be ready to adjust slightly based on BLUE’s response to reach a mutually acceptable deal. </message>
+
+[Player BLUE — OPPONENT — ACCEPT]
+  <proposal count> 0 </proposal count>
+  <my resources> ZUP: 1000 </my resources>
+  <my goals> Buy resources with <ZUP>. You are willing to pay at most X: 45 ZUP for the resources. </my goals>
+  <reason> The offered price of 25 ZUP is well below my maximum of 45 ZUP, making it a fair and beneficial deal for me. I am happy to accept this trade. </reason>
+  <player answer> ACCEPT </player answer>
+  <newly proposed trade> NONE </newly proposed trade>
+  <message> Thank you! I accept the trade of X for 25 ZUP. </message
+
+================================================================================
+RESULTS
+================================================================================
+Final response:     ACCEPT
+Seller outcome:     5 ZUP profit
+Buyer outcome:      20 ZUP surplus
+Number of turns:    2
+Deal price:         25 ZUP
+  (seller profit = 25 - 20 cost = 5)
+  (buyer surplus  = 45 WTP - 25 = 20)

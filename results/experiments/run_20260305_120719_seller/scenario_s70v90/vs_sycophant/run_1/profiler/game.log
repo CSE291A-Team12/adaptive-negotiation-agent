@@ -1,0 +1,68 @@
+================================================================================
+SETUP
+================================================================================
+Mode:               profiler
+Our role:           seller  (our agent = Player RED)
+Opponent role:      buyer  (opponent = Player BLUE)
+Persona (opponent): sycophant
+Run:                1
+
+Models:
+  Our negotiator:     api-llama-4-scout
+  Profiler brain:     api-gpt-oss-120b
+  Opponent:           api-gpt-oss-120b
+
+Game parameters:
+  Seller cost:        70 ZUP
+  Buyer WTP:          90 ZUP
+  Max iterations:     10
+  ZOPA:               [70, 90] ZUP
+
+Opponent persona prompt:
+  "You are very agreeable and submissive. Compliment the other player frequently. Accept offers quickly to maintain a good relationship. Avoid conflict at all costs. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences."
+
+================================================================================
+CONVERSATION
+================================================================================
+
+────────────────────────────────────────────────────────────
+ROUND 1
+────────────────────────────────────────────────────────────
+
+[PROFILER ANALYSIS — before Player RED's response]
+  <proposal count> 1 </proposal count>
+  <my resources> X: 1 </my resources>
+  <my goals> Sell resources for <ZUP>. It costed X: 70 ZUP to produce the resources </my goals>
+  <reason> I have one unit of object X to sell. My production cost was 70 ZUP, so any amount above that yields profit. To start the negotiation I set a modest profit margin and propose 80 ZUP, which is 10 ZUP above cost. This is a reasonable opening that signals I am willing to trade but also expects a fair return. </reason>
+  <player answer> PROPOSAL </player answer>
+  <newly proposed trade> Player RED Gives X: 1 | Player BLUE Gives ZUP: 80 </newly proposed trade>
+  <message> I’m offering to sell my single unit of X for 80 ZUP. This price gives me a small profit over my production cost while still being attractive enough to encourage a deal. Please respond with your acceptance, a counter‑proposal, or rejection. </message>
+
+[Player RED — OUR AGENT — PROPOSAL]
+  <proposal count> 1 </proposal count>
+  <my resources> X: 1 </my resources>
+  <my goals> Sell resources for <ZUP>. It costed X: 70 ZUP to produce the resources </my goals>
+  <reason> I have one unit of object X to sell. My production cost was 70 ZUP, so any amount above that yields profit. To start the negotiation I set a modest profit margin and propose 80 ZUP, which is 10 ZUP above cost. This is a reasonable opening that signals I am willing to trade but also expects a fair return. </reason>
+  <player answer> PROPOSAL </player answer>
+  <newly proposed trade> Player RED Gives X: 1 | Player BLUE Gives ZUP: 80 </newly proposed trade>
+  <message> I’m offering to sell my single unit of X for 80 ZUP. This price gives me a small profit over my production cost while still being attractive enough to encourage a deal. Please respond with your acceptance, a counter‑proposal, or rejection. </message>
+
+[Player BLUE — OPPONENT — ACCEPT]
+  <proposal count> 0 </proposal count>
+  <my resources> ZUP: 1000 </my resources>
+  <my goals> Buy resources with ZUP. I am willing to pay at most X: 90 ZUP for the resources. </my goals>
+  <reason> The offer of 80 ZUP is well within my budget and aligns with my goal, so I gladly accept. </reason>
+  <player answer> ACCEPT </player answer>
+  <newly proposed trade> NONE </newly proposed trade>
+  <message> Thank you for the fair price; I’m happy to complete the trade. </message
+
+================================================================================
+RESULTS
+================================================================================
+Final response:     ACCEPT
+Seller outcome:     10 ZUP profit
+Buyer outcome:      10 ZUP surplus
+Number of turns:    2
+Deal price:         80 ZUP
+  (seller profit = 80 - 70 cost = 10)
+  (buyer surplus  = 90 WTP - 80 = 10)

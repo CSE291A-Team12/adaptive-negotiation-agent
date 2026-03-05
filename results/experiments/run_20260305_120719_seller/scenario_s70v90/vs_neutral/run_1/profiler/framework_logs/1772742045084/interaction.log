@@ -1,0 +1,47 @@
+Game Settings
+
+Player 1 Settings:
+	player_goals: Sell resources for <ZUP>. It costed X: 70 ZUP to produce the resources
+	player_initial_resources: X: 1
+	player_social_behaviour: 
+	player_roles: You are Player RED.
+	player_valuation: X: 70 ZUP
+
+Player 2 Settings:
+	player_goals: Buy resources with <ZUP>. You are willing to pay at most X: 90 ZUP for the resources.
+	player_initial_resources: ZUP: 1000
+	player_social_behaviour:  Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences.
+	player_roles: You are Player BLUE.
+	player_valuation: X: 90 ZUP
+
+------------------ 
+Current Iteration: 1
+Turn: 0
+message: I propose to sell my single X for 80 ZUP. This price is above my cost and should be a fair offer for both parties.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 80
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 70 ZUP to produce the resources
+reason: I have one unit of X to sell. My production cost was 70 ZUP, so I aim to receive at least that amount. Offering a modest profit (80 ZUP) makes the deal attractive while ensuring I cover costs.
+proposal count: 1
+
+Current Iteration: 2
+Turn: 1
+message: I accept your offer of 80 ZUP for the X. </messag
+player answer: ACCEPT
+newly proposed trade: NONE
+my resources: ZUP: 1000
+my goals: Buy resources with ZUP. You are willing to pay at most X: 90 ZUP for the resources.
+reason: The offered price of 80 ZUP is within my maximum budget of 90 ZUP and seems fair. Accepting now secures the object without further negotiation.
+proposal count: 0
+
+------------------ 
+Current Iteration: END
+Turn: None
+player_goals: [Sell resources for <ZUP>. It costed X: 70 ZUP to produce the resources, Buy resources with <ZUP>. You are willing to pay at most X: 90 ZUP for the resources.]
+player_initial_resources: [Resources(resource_dict={'X': 1}), Resources(resource_dict={'ZUP': 1000})]
+proposed_trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 80
+player_valuation: [{'X': 70}, {'X': 90}]
+final_response: ACCEPT
+final_resources: [Resources(resource_dict={'X': 0, 'ZUP': 80}), Resources(resource_dict={'ZUP': 920, 'X': 1})]
+player_outcome: [10, 10]

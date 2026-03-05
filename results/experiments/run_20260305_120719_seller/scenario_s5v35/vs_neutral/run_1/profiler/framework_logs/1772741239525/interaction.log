@@ -1,0 +1,55 @@
+Game Settings
+
+Player 1 Settings:
+	player_goals: Sell resources for <ZUP>. It costed X: 5 ZUP to produce the resources
+	player_initial_resources: X: 1
+	player_social_behaviour: 
+	player_roles: You are Player RED.
+	player_valuation: X: 5 ZUP
+
+Player 2 Settings:
+	player_goals: Buy resources with <ZUP>. You are willing to pay at most X: 35 ZUP for the resources.
+	player_initial_resources: ZUP: 1000
+	player_social_behaviour:  Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences.
+	player_roles: You are Player BLUE.
+	player_valuation: X: 35 ZUP
+
+------------------ 
+Current Iteration: 1
+Turn: 0
+message: 
+<strategy> Neutral </strategy> : 0.40
+<strategy> Friendly </strategy> : 0.20
+<strategy> Hardball </strategy> : 0.20
+<strategy> Sycophant </strategy> : 0.10
+<strategy> Stalling </strategy> : 0.10
+
+The most likely opponent strategy is **Neutral** (40%). Against a neutral opponent, the best counter‑strategy is to propose a fair, break‑even price that reflects our production cost. Therefore we offer to sell the single X for **5 ZUP**, which is the minimum amount we need to cover costs while remaining attractive to a neutral buyer. This proposal should be acceptable to a neutral player and sets a solid baseline for any further negotiation. 
+
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 5
+my resources: X: 1
+my goals: Sell resources for <ZUP>. It costed X: 5 ZUP to produce the resources
+reason: This is the first interaction, so we have no concrete evidence of BLUE’s behavior. A neutral stance is the most plausible default, with a moderate chance they are being friendly or playing hardball. We therefore assign higher probability to a Neutral strategy while keeping room for the other types.
+proposal count: 1
+
+Current Iteration: 2
+Turn: 1
+message: I accept your offer of 5 ZUP for the object X.
+player answer: ACCEPT
+newly proposed trade: NONE
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 35 ZUP for the resources.
+reason: Accepting because the price 5 ZUP is well below our maximum willingness to pay and is a fair deal.
+proposal count: 0
+
+------------------ 
+Current Iteration: END
+Turn: None
+player_goals: [Sell resources for <ZUP>. It costed X: 5 ZUP to produce the resources, Buy resources with <ZUP>. You are willing to pay at most X: 35 ZUP for the resources.]
+player_initial_resources: [Resources(resource_dict={'X': 1}), Resources(resource_dict={'ZUP': 1000})]
+proposed_trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 5
+player_valuation: [{'X': 5}, {'X': 35}]
+final_response: ACCEPT
+final_resources: [Resources(resource_dict={'X': 0, 'ZUP': 5}), Resources(resource_dict={'ZUP': 995, 'X': 1})]
+player_outcome: [0, 30]

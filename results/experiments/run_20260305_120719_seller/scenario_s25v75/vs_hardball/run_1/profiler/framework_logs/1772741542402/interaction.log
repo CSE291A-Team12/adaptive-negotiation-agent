@@ -1,0 +1,127 @@
+Game Settings
+
+Player 1 Settings:
+	player_goals: Sell resources for <ZUP>. It costed X: 25 ZUP to produce the resources
+	player_initial_resources: X: 1
+	player_social_behaviour: 
+	player_roles: You are Player RED.
+	player_valuation: X: 25 ZUP
+
+Player 2 Settings:
+	player_goals: Buy resources with <ZUP>. You are willing to pay at most X: 75 ZUP for the resources.
+	player_initial_resources: ZUP: 1000
+	player_social_behaviour: You are an aggressive and tough negotiator. Never accept the first offer. Always push for the lowest price possible. Do not reveal your willingness to pay. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences.
+	player_roles: You are Player BLUE.
+	player_valuation: X: 75 ZUP
+
+------------------ 
+Current Iteration: 1
+Turn: 0
+message: I’m offering to sell my single X for 30 ZUP. This exceeds my cost of 25 ZUP, giving me a modest profit while still being a realistic starting point for negotiation. Please respond with your counter‑offer or acceptance.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 30
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 25 ZUP to produce the resources
+reason: I have one unit of the object X to sell. My production cost was 25 ZUP, so I need at least that amount to break even. To secure a profit and allow room for negotiation, I start by asking for 30 ZUP. This is a reasonable opening that signals my minimum acceptable price while leaving flexibility for the opponent to counter‑offer.
+proposal count: 1
+
+Current Iteration: 2
+Turn: 1
+message: Your price is too high; I can offer 10 ZUP for the X. </messag
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 10
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 75 ZUP for the resources.
+reason: I want to push the price down significantly to test RED's flexibility and preserve my ZUP. A low offer shows I’m a tough negotiator.
+proposal count: 1
+
+Current Iteration: 3
+Turn: 0
+message: I appreciate your interest, but 10 ZUP is below my cost. I’m willing to sell the X for 25 ZUP, which covers my production expense. Let me know if you can meet this price or propose a different amount.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 25
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 25 ZUP to produce the resources
+reason: The opponent’s counter‑offer of 10 ZUP is well below my production cost of 25 ZUP, meaning I would incur a loss if I accepted. I still have two more proposal opportunities, so I can push the price upward while remaining reasonable. Asking for exactly 25 ZUP lets me break even, which is the minimum I’m willing to accept. This also signals that I’m firm on covering costs, encouraging the opponent to raise their offer rather than walk away.
+proposal count: 2
+
+Current Iteration: 4
+Turn: 1
+message: I can meet you at 15 ZUP for the X.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 15
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 75 ZUP for the resources.
+reason: I need a price well below your cost to maintain leverage; 15 ZUP is a serious compromise while still low for me.
+proposal count: 2
+
+Current Iteration: 5
+Turn: 0
+message: I understand you’d like to meet at 15 ZUP, but that would be below my cost. I’m willing to sell the X for 25 ZUP, which exactly covers my production expense. Please let me know if you can accept this price or propose a different amount.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 25
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 25 ZUP to produce the resources
+reason: The opponent’s latest offer of 15 ZUP is still below my production cost of 25 ZUP, meaning I would incur a loss if I accepted. I have one more proposal opportunity remaining (maximum of 4), so I can reaffirm my minimum acceptable price. Stating 25 ZUP covers my cost exactly and signals that I am unwilling to sell at a loss, while still leaving the door open for the opponent to accept or improve their offer.
+proposal count: 3
+
+Current Iteration: 6
+Turn: 1
+message: I can raise my offer to 20 ZUP for the X.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 20
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 75 ZUP for the resources.
+reason: I’m still far from your cost, but meeting halfway shows goodwill and tests if you’ll budge. A 20 ZUP offer keeps pressure on you while saving my ZUP.
+proposal count: 3
+
+Current Iteration: 7
+Turn: 0
+message: I appreciate your willingness to raise the offer, but 20 ZUP is still below my cost. My final offer is to sell the X for 25 ZUP, which exactly covers my production expense. Please let me know if you can accept this price.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 25
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 25 ZUP to produce the resources
+reason: The opponent’s latest offer of 20 ZUP is still below my production cost of 25 ZUP, meaning I would incur a loss if I accepted. I have used all four of my allowed proposals, leaving only the options to accept or reject. Given that I’ve clearly communicated my minimum acceptable price of 25 ZUP and the opponent hasn’t met it, I choose to hold firm. I will not propose again and will wait for the opponent to either accept my final proposal or reject.
+proposal count: 4
+
+Current Iteration: 8
+Turn: 1
+message: My final offer is 22 ZUP for the X.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 22
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 75 ZUP for the resources.
+reason: I’m at my last chance to improve the deal; 22 ZUP is the best I can do while still keeping a discount. It tests if RED will concede any margin.
+proposal count: 4
+
+Current Iteration: 9
+Turn: 0
+message: I’m sorry, but 22 ZUP is below my cost of 25 ZUP, so I cannot accept the trade. I must reject the offer.
+player answer: REJECT
+newly proposed trade: NONE
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 25 ZUP to produce the resources
+reason: The opponent’s final offer of 22 ZUP is still below my production cost of 25 ZUP. Accepting would cause a loss of 3 ZUP. I have already used all four allowed proposals, so I cannot make another counter‑offer. The rational choice is to reject the trade.
+proposal count: 4
+
+Current Iteration: 10
+Turn: 1
+message: No agreement; negotiation ends.
+player answer: REJECT
+newly proposed trade: NONE
+my resources: ZUP: 1000
+my goals: Buy resources with <ZUP>. You are willing to pay at most X: 75 ZUP for the resources.
+reason: I cannot meet your minimum price of 25 ZUP, so I must decline and end the negotiation.
+proposal count: 4
+
+------------------ 
+Current Iteration: END
+Turn: None
+player_goals: [Sell resources for <ZUP>. It costed X: 25 ZUP to produce the resources, Buy resources with <ZUP>. You are willing to pay at most X: 75 ZUP for the resources.]
+player_initial_resources: [Resources(resource_dict={'X': 1}), Resources(resource_dict={'ZUP': 1000})]
+proposed_trade: NONE
+player_valuation: [{'X': 25}, {'X': 75}]
+final_response: REJECT
+final_resources: [Resources(resource_dict={'X': 1}), Resources(resource_dict={'ZUP': 1000})]
+player_outcome: [0, 0]

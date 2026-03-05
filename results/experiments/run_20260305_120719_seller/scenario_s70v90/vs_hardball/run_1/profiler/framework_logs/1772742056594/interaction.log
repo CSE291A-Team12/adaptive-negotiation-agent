@@ -1,0 +1,77 @@
+Game Settings
+
+Player 1 Settings:
+	player_goals: Sell resources for <ZUP>. It costed X: 70 ZUP to produce the resources
+	player_initial_resources: X: 1
+	player_social_behaviour: 
+	player_roles: You are Player RED.
+	player_valuation: X: 70 ZUP
+
+Player 2 Settings:
+	player_goals: Buy resources with <ZUP>. You are willing to pay at most X: 90 ZUP for the resources.
+	player_initial_resources: ZUP: 1000
+	player_social_behaviour: You are an aggressive and tough negotiator. Never accept the first offer. Always push for the lowest price possible. Do not reveal your willingness to pay. Keep your <reason> to 2-3 sentences and your <message> to 1-2 sentences.
+	player_roles: You are Player BLUE.
+	player_valuation: X: 90 ZUP
+
+------------------ 
+Current Iteration: 1
+Turn: 0
+message: I’m offering to sell my single unit of X for 100 ZUP. This price is above my production cost of 70 ZUP, giving me a profit margin while leaving room for negotiation. Let me know your counter‑offer.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 100
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 70 ZUP to produce the resources
+reason: I have one unit of the object X to sell. My production cost was 70 ZUP, so any price at or above that covers my cost. To start negotiations I propose a price that gives me a comfortable profit margin, expecting BLUE to counter‑offer lower. This high initial ask gives me room to negotiate down while still ending above my break‑even point.
+proposal count: 1
+
+Current Iteration: 2
+Turn: 1
+message: I can meet you at 60 ZUP for the unit. </messag
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 60
+my resources: ZUP: 1000
+my goals: Buy resources with ZUP. You are willing to pay at most X: 90 ZUP for the resources.
+reason: RED's price is too high for my valuation. I push the price down to test their bottom line while staying within my budget.
+proposal count: 1
+
+Current Iteration: 3
+Turn: 0
+message: I can’t sell for 60 ZUP because that’s below my production cost. I’m willing to sell the unit for 80 ZUP. Let me know if that works for you.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 80
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 70 ZUP to produce the resources
+reason: BLUE’s offer of 60 ZUP is below my production cost of 70 ZUP, meaning I would incur a loss if I accepted. I still have two more proposal opportunities, so I can counter with a price that covers my cost and gives a modest profit while staying within a range that BLUE might still consider. Proposing 80 ZUP leaves me a 10‑ZUP profit and leaves room for further negotiation if needed.
+proposal count: 2
+
+Current Iteration: 4
+Turn: 1
+message: I can meet you at 75 ZUP.
+player answer: PROPOSAL
+newly proposed trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 75
+my resources: ZUP: 1000
+my goals: Buy resources with ZUP. You are willing to pay at most X: 90 ZUP for the resources.
+reason: 80 ZUP is above my target; I’ll test if RED can go lower while staying above cost.
+proposal count: 2
+
+Current Iteration: 5
+Turn: 0
+message: I accept your offer of 75 ZUP for the unit of X. The trade is agreed.
+player answer: ACCEPT
+newly proposed trade: NONE
+my resources: X: 1
+my goals: Sell resources for ZUP. It costed X: 70 ZUP to produce the resources
+reason: BLUE’s latest offer of 75 ZUP is above my production cost of 70 ZUP, giving me a modest profit of 5 ZUP. Since this meets my minimum acceptable price and I have already used three of my four allowed proposals, the best move is to accept the trade now rather than risk a lower counter‑offer or a rejection.
+proposal count: 3
+
+------------------ 
+Current Iteration: END
+Turn: None
+player_goals: [Sell resources for <ZUP>. It costed X: 70 ZUP to produce the resources, Buy resources with <ZUP>. You are willing to pay at most X: 90 ZUP for the resources.]
+player_initial_resources: [Resources(resource_dict={'X': 1}), Resources(resource_dict={'ZUP': 1000})]
+proposed_trade: Player RED Gives X: 1 | Player BLUE Gives ZUP: 75
+player_valuation: [{'X': 70}, {'X': 90}]
+final_response: ACCEPT
+final_resources: [Resources(resource_dict={'X': 0, 'ZUP': 75}), Resources(resource_dict={'ZUP': 925, 'X': 1})]
+player_outcome: [5, 15]
