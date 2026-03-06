@@ -294,13 +294,14 @@ def write_game_log(log_dir, mode, persona_label, persona_prompt,
 
 def run_baseline_scenario(persona_label, persona_prompt, self_is_seller, log_dir, config):
     """Run a single baseline game (static agent, no profiler). Returns (result, game)."""
+    self_max_tokens = config.get("self_max_tokens", 800)
     if self_is_seller:
-        seller = ChatGPTAgent(agent_name=AGENT_ONE, model=config["self_model"])
+        seller = ChatGPTAgent(agent_name=AGENT_ONE, model=config["self_model"], max_tokens=self_max_tokens)
         buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=config["opponent_model"], max_tokens=800)
         social = ["", persona_prompt]
     else:
         seller = ChatGPTAgent(agent_name=AGENT_ONE, model=config["opponent_model"], max_tokens=800)
-        buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=config["self_model"])
+        buyer = ChatGPTAgent(agent_name=AGENT_TWO, model=config["self_model"], max_tokens=self_max_tokens)
         social = [persona_prompt, ""]
 
     game = BuySellGame(
