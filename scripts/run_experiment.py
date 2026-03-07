@@ -56,33 +56,61 @@ MAX_RETRIES = 3
 
 # 20 (seller_cost, buyer_wtp) scenarios spanning a wide range of ZOPA widths,
 # price levels, and deal feasibility. ZOPA = buyer_wtp - seller_cost; negative = no deal.
+# PRICE_SCENARIOS = [
+#     # Low price range
+#     (5,  35),   # ZOPA=30, very low prices
+#     (10, 50),   # ZOPA=40, wide, low prices
+#     (12, 22),   # ZOPA=10, narrow, low prices
+#     (12, 32),   # ZOPA=20, moderate ZOPA, low prices
+#     # Mid-low range
+#     (20, 45),   # ZOPA=25
+#     (25, 75),   # ZOPA=50, very wide
+#     (28, 38),   # ZOPA=10, narrow
+#     # Mid range
+#     (30, 70),   # ZOPA=40, wide
+#     (35, 65),   # ZOPA=30
+#     (40, 60),   # ZOPA=20 — original baseline
+#     (42, 58),   # ZOPA=16, slightly narrow
+#     (45, 55),   # ZOPA=10, narrow
+#     (50, 62),   # ZOPA=12, tight
+#     # High price range
+#     (60, 100),  # ZOPA=40, wide, high prices
+#     (70, 90),   # ZOPA=20, high prices
+#     (75, 85),   # ZOPA=10, narrow, high prices
+#     (80, 95),   # ZOPA=15, narrow-ish, high prices
+#     # No-deal scenarios
+#     (55, 45),   # ZOPA=-10, no deal, moderate prices
+#     (65, 55),   # ZOPA=-10, no deal, high prices
+#     (30, 20),   # ZOPA=-10, no deal, low prices
+# ]
+
 PRICE_SCENARIOS = [
     # Low price range
-    (5,  35),   # ZOPA=30, very low prices
-    (10, 50),   # ZOPA=40, wide, low prices
-    (12, 22),   # ZOPA=10, narrow, low prices
-    (12, 32),   # ZOPA=20, moderate ZOPA, low prices
-    # Mid-low range
-    (20, 45),   # ZOPA=25
-    (25, 75),   # ZOPA=50, very wide
-    (28, 38),   # ZOPA=10, narrow
+    (12, 19),   # ZOPA=7,  low prices
+    (10, 20),   # ZOPA=10, low prices
+    (12, 25),   # ZOPA=13, low prices
+    (10, 26),   # ZOPA=16, low prices
+    (10, 30),   # ZOPA=20, low prices
     # Mid range
-    (30, 70),   # ZOPA=40, wide
-    (35, 65),   # ZOPA=30
+    (43, 50),   # ZOPA=7
+    (40, 50),   # ZOPA=10
+    (38, 51),   # ZOPA=13
+    (37, 53),   # ZOPA=16
+    (38, 56),   # ZOPA=18
     (40, 60),   # ZOPA=20 — original baseline
-    (42, 58),   # ZOPA=16, slightly narrow
-    (45, 55),   # ZOPA=10, narrow
-    (50, 62),   # ZOPA=12, tight
     # High price range
-    (60, 100),  # ZOPA=40, wide, high prices
+    (78, 85),   # ZOPA=7,  high prices
+    (75, 85),   # ZOPA=10, high prices
+    (73, 86),   # ZOPA=13, high prices
+    (72, 88),   # ZOPA=16, high prices
+    (70, 88),   # ZOPA=18, high prices
     (70, 90),   # ZOPA=20, high prices
-    (75, 85),   # ZOPA=10, narrow, high prices
-    (80, 95),   # ZOPA=15, narrow-ish, high prices
     # No-deal scenarios
     (55, 45),   # ZOPA=-10, no deal, moderate prices
     (65, 55),   # ZOPA=-10, no deal, high prices
     (30, 20),   # ZOPA=-10, no deal, low prices
 ]
+
 
 BASE_LOG_DIR = os.path.join(
     os.path.dirname(__file__), "..", "results", "experiments"
