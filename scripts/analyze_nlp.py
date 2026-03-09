@@ -585,7 +585,10 @@ immediately). This reveals the opponent LLM failing to follow persona instructio
 reasoning in public messages.
 
 When answering:
-1. Be specific — cite game IDs and iteration numbers as [game_id, iter N].
+1. EVERY quote or specific claim MUST include the game tag shown in the data \
+(e.g., [G03 s12v19/hardball/profiler, iter 2]). Never present a quote without \
+identifying which game it came from. The data prefixes each line with a tag \
+like [G03] — use it.
 2. Quote exact text from transcripts when relevant.
 3. Distinguish patterns (across multiple games) from one-off observations.
 4. If data is insufficient, say so.
@@ -608,20 +611,27 @@ def build_query_context(games_full, annotations):
         f"{len(personas)} personas ({', '.join(sorted(personas))})\n"
     )
 
-    for g in games_full:
+    for gi, g in enumerate(games_full):
         gid = g["game_id"]
+        # Short tag: [G01 s10v20/hardball/baseline]
+        short_id = f"G{gi+1:02d}"
+        scenario = g.get("scenario", "?")
+        persona = g.get("persona", "?")
+        mode = g.get("mode", "?")
+        tag = f"[{short_id} {scenario}/{persona}/{mode}]"
+
         parts.append(f"\n{'=' * 70}")
-        parts.append(f"GAME: {gid}")
+        parts.append(f"{tag} GAME: {gid}")
         parts.append(
-            f"Mode: {g.get('mode')}  |  Scenario: {g.get('scenario')}  |  "
-            f"Persona: {g.get('persona')}  |  Our role: {g.get('self_role')}"
+            f"{tag} Mode: {mode}  |  Scenario: {scenario}  |  "
+            f"Persona: {persona}  |  Our role: {g.get('self_role')}"
         )
         parts.append(
-            f"Costs: seller={g.get('seller_cost')}, buyer_wtp={g.get('buyer_wtp')}, "
+            f"{tag} Costs: seller={g.get('seller_cost')}, buyer_wtp={g.get('buyer_wtp')}, "
             f"ZOPA={g.get('zopa')}"
         )
         parts.append(
-            f"Outcome: {g.get('final_response')}  |  Price: {g.get('deal_price')}  |  "
+            f"{tag} Outcome: {g.get('final_response')}  |  Price: {g.get('deal_price')}  |  "
             f"Seller: {g.get('seller_outcome')}  |  Buyer: {g.get('buyer_outcome')}  |  "
             f"surplus_pct: {g.get('surplus_pct')}  |  Turns: {g.get('num_turns')}"
         )
@@ -631,43 +641,43 @@ def build_query_context(games_full, annotations):
             label = "OUR" if t.get("is_our_agent") else "OPP"
             price_str = f"  price={t['proposed_price']}" if t.get("proposed_price") else ""
             parts.append(
-                f"  [iter {t['iteration']}, {t['player']} {label}] "
+                f"{tag}   [iter {t['iteration']}, {t['player']} {label}] "
                 f"{t.get('player_answer', '?')}{price_str}"
             )
             if t.get("reason"):
-                parts.append(f"    reason: {t['reason']}")
+                parts.append(f"{tag}     reason: {t['reason']}")
             if t.get("message"):
-                parts.append(f"    message: {t['message']}")
+                parts.append(f"{tag}     message: {t['message']}")
             if t.get("profiler_analysis"):
                 # Truncate long profiler blocks
                 pa = t["profiler_analysis"]
                 if len(pa) > 500:
                     pa = pa[:500] + "..."
-                parts.append(f"    [PROFILER]: {pa}")
+                parts.append(f"{tag}     [PROFILER]: {pa}")
 
         # Include profiler logs if available
         prof_logs = g.get("profiler_logs", [])
         if prof_logs:
-            parts.append(f"  [PROFILER CALLS: {len(prof_logs)} total]")
+            parts.append(f"{tag}   [PROFILER CALLS: {len(prof_logs)} total]")
             for pi, pl in enumerate(prof_logs, 1):
                 opp_msg = pl["opponent_message"][:200]
                 prof_out = pl["profiler_output"][:400]
-                parts.append(f"    Call {pi}: opp={opp_msg}")
-                parts.append(f"      -> {prof_out}")
+                parts.append(f"{tag}     Call {pi}: opp={opp_msg}")
+                parts.append(f"{tag}       -> {prof_out}")
 
         # Include annotation summary if available
         ann = annotations.get(gid)
         if ann and not ann.get("parse_error"):
-            parts.append(f"  [ANNOTATION] {ann.get('game_summary', '')}")
+            parts.append(f"{tag}   [ANNOTATION] {ann.get('game_summary', '')}")
             for nb in ann.get("notable_behaviors", []):
                 parts.append(
-                    f"    - [{nb.get('significance')}] iter {nb.get('iteration')}: "
+                    f"{tag}     - [{nb.get('significance')}] iter {nb.get('iteration')}: "
                     f"{nb.get('description')}"
                 )
             pa = ann.get("profiler_assessment", {})
             if pa.get("present"):
                 parts.append(
-                    f"    Profiler accuracy: {pa.get('accuracy')} — "
+                    f"{tag}     Profiler accuracy: {pa.get('accuracy')} — "
                     f"{pa.get('notes', '')}"
                 )
 
@@ -802,7 +812,7 @@ def cmd_annotate(args):
             print(f" ERROR: {e}")
 
         # Basic rate limiting
-        time.sleep(0.5)
+        time.sleep(0.1)
 
     print(f"\nAnnotations: {ann_path} ({len(annotations)} games)")
 
