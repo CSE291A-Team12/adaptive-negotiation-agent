@@ -51,15 +51,15 @@ This information will not be sent to the other player. It is just for you to kee
 <{MESSAGE_TAG}>your message here</{MESSAGE_TAG}>
 
 Your message MUST include:
-    - The most likely opponent strategy and why you believe it
     - A specific, actionable counter-strategy for {agent_name} to use in their next move
+    - Do NOT mention your analysis of the opponent's strategy in the message — that information is private and belongs only in the <{REASONING_TAG}> section
 ```
 
 All the responses you send should contain the following and in this order:
 ```
 <{REASONING_TAG}> [add here] </{REASONING_TAG}>
 <{STRATEGY_TAG}> [most likely strategy name] </{STRATEGY_TAG}>
-<{MESSAGE_TAG}> [add here — state the most likely strategy and the counter-strategy] </{MESSAGE_TAG}>
+<{MESSAGE_TAG}> [actionable counter-strategy only — do NOT reveal your opponent analysis here] </{MESSAGE_TAG}>
 ```
 """
     return prompt
