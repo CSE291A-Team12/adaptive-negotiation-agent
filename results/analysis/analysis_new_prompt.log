@@ -1,0 +1,473 @@
+
+======================================================================================================================================================
+  DATA QUALITY & COVERAGE REPORT
+======================================================================================================================================================
+  Total records              : 299
+  Positive-ZOPA games        : 254
+  Negative-ZOPA games        : 45
+
+  Deals struck outside ZOPA  : 20  (surplus% outside [0,100]; included in all averages)
+    s10v20       compare    neutral      seller=   20  buyer=  -10  price=  30  ZOPA=  +10  our_surplus%=+200%
+    s70v88       compare    sycophant    seller=   30  buyer=  -12  price= 100  ZOPA=  +18  our_surplus%=+167%
+    s55v45       baseline   hardball     seller=  -10  buyer=    0  price=  45  ZOPA=  -10  our_surplus%=+100%
+    s55v45       baseline   stalling     seller=  -10  buyer=    0  price=  45  ZOPA=  -10  our_surplus%=+100%
+    s55v45       baseline   sycophant    seller=  -10  buyer=    0  price=  45  ZOPA=  -10  our_surplus%=+100%
+    s75v85       profiler   sycophant    seller=   20  buyer=  -10  price=  95  ZOPA=  +10  our_surplus%=+200%
+    s75v85       baseline   sycophant    seller=   12  buyer=   -2  price=  87  ZOPA=  +10  our_surplus%=+120%
+    s73v86       compare    sycophant    seller=   27  buyer=  -14  price= 100  ZOPA=  +13  our_surplus%=+208%
+    s10v26       compare    sycophant    seller=   18  buyer=   -2  price=  28  ZOPA=  +16  our_surplus%=+112%
+    s65v55       baseline   hardball     seller=  -10  buyer=    0  price=  55  ZOPA=  -10  our_surplus%=+100%
+    s65v55       compare    hardball     seller=  -10  buyer=    0  price=  55  ZOPA=  -10  our_surplus%=+100%
+    s65v55       baseline   friendly     seller=  -10  buyer=    0  price=  55  ZOPA=  -10  our_surplus%=+100%
+    s65v55       baseline   neutral      seller=  -10  buyer=    0  price=  55  ZOPA=  -10  our_surplus%=+100%
+    s65v55       baseline   sycophant    seller=  -10  buyer=    0  price=  55  ZOPA=  -10  our_surplus%=+100%
+    s43v50       compare    stalling     seller=   27  buyer=  -20  price=  70  ZOPA=   +7  our_surplus%=+386%
+    s43v50       compare    sycophant    seller=   22  buyer=  -15  price=  65  ZOPA=   +7  our_surplus%=+314%
+    s70v90       profiler   sycophant    seller=   30  buyer=  -10  price= 100  ZOPA=  +20  our_surplus%=+150%
+    s30v20       profiler   stalling     seller=  -10  buyer=    0  price=  20  ZOPA=  -10  our_surplus%=+100%
+    s38v51       baseline   hardball     seller=   -3  buyer=   16  price=  35  ZOPA=  +13  our_surplus%=-23%
+    s38v56       profiler   hardball     seller=   52  buyer=  -34  price=  90  ZOPA=  +18  our_surplus%=+289%
+
+  No-deals in positive-ZOPA  : 29  (missed opportunities; contribute 0% to surplus avg)
+    baseline    : 10 no-deals / 84 games (11%)
+    profiler    : 9 no-deals / 85 games (10%)
+    compare     : 10 no-deals / 85 games (11%)
+
+======================================================================================================================================================
+  EXPERIMENT SUMMARY
+======================================================================================================================================================
+  Run folder    : results/experiments/run_20260307_230155
+  Timestamp     : 20260307_230155
+  Role          : seller   |   Modes: baseline, profiler, compare
+  Scenarios     : 20 (17 positive-ZOPA, 3 negative-ZOPA)  |  Personas: 5  |  Records: 299
+
+  Baseline model   : api-llama-4-scout
+  Compare model    : api-gpt-oss-120b
+  Negotiator model : api-llama-4-scout
+  Profiler model   : api-gpt-oss-120b
+  Opponent model   : api-gpt-oss-120b
+
+======================================================================================================================================================
+  ZOPA-BAND SUMMARY  (positive-ZOPA scenarios grouped by width)
+======================================================================================================================================================
+  surplus%  = our_outcome / ZOPA × 100  (mean over ALL games; no-deals = 0%)
+  cond%     = mean surplus% conditioned on deal being reached
+  exp%      = deal_rate × cond%  (expected value; primary comparison metric)
+  welfare%  = (seller+buyer)/ZOPA × 100  conditioned on deal (≈100% if correct)
+
+Band       ZOPA rng  N/mode                       baseline                                            profiler                                            compare                      
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+narrow       [1,10]      29  deal=27/29(93%) all=75.5±37.2% cond=81.1±31.9% exp=75.5% wf=100.0±0.0% itr=5.1±1.8t oz=1  deal=25/30(83%) all=74.1±48.5% cond=89.0±38.4% exp=74.1% wf=100.0±0.0% itr=6.7±1.9t oz=1  deal=25/30(83%) all=93.1±83.9% cond=111.7±79.6% exp=93.1% wf=100.0±0.0% itr=5.7±2.2t oz=3
+medium      [11,18]      40  deal=35/40(87%) all=69.8±39.8% cond=79.8±31.5% exp=69.8% wf=100.0±0.0% itr=5.5±2.2t oz=1  deal=37/40(92%) all=85.8±45.5% cond=92.8±39.8% exp=85.8% wf=100.0±0.0% itr=5.7±1.8t oz=1  deal=36/40(90%) all=82.2±39.9% cond=91.4±30.2% exp=82.2% wf=100.0±0.0% itr=5.0±1.9t oz=3
+wide        [19,99]      15  deal=12/15(80%) all=58.3±40.8% cond=72.9±31.0% exp=58.3% wf=100.0±0.0% itr=5.4±2.7t  deal=14/15(93%) all=82.7±36.1% cond=88.6±29.1% exp=82.7% wf=100.0±0.0% itr=5.1±2.1t oz=1  deal=14/15(93%) all=77.3±32.0% cond=82.9±24.6% exp=77.3% wf=100.0±0.0% itr=4.9±2.4t
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+======================================================================================================================================================
+  CROSS-SCENARIO SUMMARY  (positive-ZOPA only)
+======================================================================================================================================================
+  Columns per mode: deal% | all_surplus mean±std | cond_surplus mean±std | exp_surplus% | welfare% | turns
+  'all' includes no-deals as 0%; 'cond' = deals only; 'oz' = deals outside ZOPA (still counted)
+
+Scenario       cost    wtp   ZOPA                          baseline                                                  profiler                                                  compare                         
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+s10v20           10     20    +10  5/5(100%)  all=74.0±43.4%  cond=74.0±43.4%  exp=74.0%  wf=100.0±0.0%  itr=3.4±1.9t  5/5(100%)  all=82.0±40.2%  cond=82.0±40.2%  exp=82.0%  wf=100.0±0.0%  itr=5.0±1.9t  5/5(100%)  all=110.0±54.8%  cond=110.0±54.8%  exp=110.0%  wf=100.0±0.0%  itr=3.8±1.1t oz=1
+s70v88           70     88    +18  3/5(60%)  all=57.8±52.9%  cond=96.3±6.4%  exp=57.8%  wf=100.0±0.0%  itr=7.8±2.2t  4/5(80%)  all=71.1±44.2%  cond=88.9±22.2%  exp=71.1%  wf=100.0±0.0%  itr=6.6±2.3t  5/5(100%)  all=101.1±40.9%  cond=101.1±40.9%  exp=101.1%  wf=100.0±0.0%  itr=4.8±0.4t oz=1
+s72v88           72     88    +16  5/5(100%)  all=83.8±27.1%  cond=83.8±27.1%  exp=83.8%  wf=100.0±0.0%  itr=5.4±0.9t  5/5(100%)  all=88.8±10.3%  cond=88.8±10.3%  exp=88.8%  wf=100.0±0.0%  itr=5.8±1.1t  4/5(80%)  all=68.8±39.3%  cond=85.9±9.4%  exp=68.8%  wf=100.0±0.0%  itr=6.0±2.2t
+s75v85           75     85    +10  4/4(100%)  all=92.5±29.9%  cond=92.5±29.9%  exp=92.5%  wf=100.0±0.0%  itr=5.2±0.5t oz=1  4/5(80%)  all=90.0±74.2%  cond=112.5±62.9%  exp=90.0%  wf=100.0±0.0%  itr=7.0±2.1t oz=1  4/5(80%)  all=70.0±44.7%  cond=87.5±25.0%  exp=70.0%  wf=100.0±0.0%  itr=6.4±2.2t
+s73v86           73     86    +13  5/5(100%)  all=100.0±0.0%  cond=100.0±0.0%  exp=100.0%  wf=100.0±0.0%  itr=5.8±1.1t  3/5(60%)  all=58.5±53.5%  cond=97.4±4.4%  exp=58.5%  wf=100.0±0.0%  itr=8.0±1.9t  4/5(80%)  all=83.1±78.1%  cond=103.8±72.6%  exp=83.1%  wf=100.0±0.0%  itr=5.4±2.7t oz=1
+s10v30           10     30    +20  5/5(100%)  all=50.0±35.4%  cond=50.0±35.4%  exp=50.0%  wf=100.0±0.0%  itr=3.2±1.6t  5/5(100%)  all=70.0±28.3%  cond=70.0±28.3%  exp=70.0%  wf=100.0±0.0%  itr=3.2±1.6t  5/5(100%)  all=82.0±26.8%  cond=82.0±26.8%  exp=82.0%  wf=100.0±0.0%  itr=3.4±1.9t
+s40v60           40     60    +20  3/5(60%)  all=55.0±51.2%  cond=91.7±14.4%  exp=55.0%  wf=100.0±0.0%  itr=6.6±3.1t  4/5(80%)  all=78.0±43.8%  cond=97.5±5.0%  exp=78.0%  wf=100.0±0.0%  itr=6.2±2.2t  4/5(80%)  all=70.0±44.7%  cond=87.5±25.0%  exp=70.0%  wf=100.0±0.0%  itr=6.0±2.6t
+s12v19           12     19     +7  5/5(100%)  all=68.6±34.1%  cond=68.6±34.1%  exp=68.6%  wf=100.0±0.0%  itr=4.8±1.3t  4/5(80%)  all=77.1±43.6%  cond=96.4±7.1%  exp=77.1%  wf=100.0±0.0%  itr=7.0±1.9t  5/5(100%)  all=82.9±31.0%  cond=82.9±31.0%  exp=82.9%  wf=100.0±0.0%  itr=5.0±0.0t
+s40v50           40     50    +10  4/5(80%)  all=70.0±44.7%  cond=87.5±25.0%  exp=70.0%  wf=100.0±0.0%  itr=5.6±2.5t  2/5(40%)  all=30.0±44.7%  cond=75.0±35.4%  exp=30.0%  wf=100.0±0.0%  itr=8.4±2.3t  4/5(80%)  all=70.0±44.7%  cond=87.5±25.0%  exp=70.0%  wf=100.0±0.0%  itr=6.0±2.6t
+s10v26           10     26    +16  5/5(100%)  all=68.8±33.7%  cond=68.8±33.7%  exp=68.8%  wf=100.0±0.0%  itr=3.8±1.6t  5/5(100%)  all=73.8±37.6%  cond=73.8±37.6%  exp=73.8%  wf=100.0±0.0%  itr=4.2±1.3t  5/5(100%)  all=97.5±13.7%  cond=97.5±13.7%  exp=97.5%  wf=100.0±0.0%  itr=4.4±0.9t oz=1
+s37v53           37     53    +16  5/5(100%)  all=96.2±8.4%  cond=96.2±8.4%  exp=96.2%  wf=100.0±0.0%  itr=5.0±0.0t  5/5(100%)  all=96.2±8.4%  cond=96.2±8.4%  exp=96.2%  wf=100.0±0.0%  itr=6.2±1.1t  4/5(80%)  all=75.0±42.6%  cond=93.8±8.8%  exp=75.0%  wf=100.0±0.0%  itr=5.8±2.8t
+s43v50           43     50     +7  5/5(100%)  all=85.7±31.9%  cond=85.7±31.9%  exp=85.7%  wf=100.0±0.0%  itr=4.8±0.4t  5/5(100%)  all=100.0±0.0%  cond=100.0±0.0%  exp=100.0%  wf=100.0±0.0%  itr=6.2±1.1t  4/5(80%)  all=165.7±174.0%  cond=207.1±170.0%  exp=165.7%  wf=100.0±0.0%  itr=5.8±2.4t oz=2
+s70v90           70     90    +20  4/5(80%)  all=70.0±41.1%  cond=87.5±14.4%  exp=70.0%  wf=100.0±0.0%  itr=6.4±2.2t  5/5(100%)  all=100.0±35.4%  cond=100.0±35.4%  exp=100.0%  wf=100.0±0.0%  itr=6.0±1.0t oz=1  5/5(100%)  all=80.0±27.4%  cond=80.0±27.4%  exp=80.0%  wf=100.0±0.0%  itr=5.4±2.2t
+s78v85           78     85     +7  4/5(80%)  all=65.7±48.0%  cond=82.1±35.7%  exp=65.7%  wf=100.0±0.0%  itr=6.6±2.1t  5/5(100%)  all=65.7±48.0%  cond=65.7±48.0%  exp=65.7%  wf=100.0±0.0%  itr=6.6±0.9t  3/5(60%)  all=60.0±54.8%  cond=100.0±0.0%  exp=60.0%  wf=100.0±0.0%  itr=7.4±2.5t
+s38v51           38     51    +13  3/5(60%)  all=33.8±57.7%  cond=56.4±68.9%  exp=33.8%  wf=100.0±0.0%  itr=6.8±2.9t oz=1  5/5(100%)  all=89.2±24.1%  cond=89.2±24.1%  exp=89.2%  wf=100.0±0.0%  itr=5.6±0.9t  4/5(80%)  all=69.2±43.2%  cond=86.5±22.1%  exp=69.2%  wf=100.0±0.0%  itr=5.6±2.6t
+s38v56           38     56    +18  4/5(80%)  all=73.3±41.8%  cond=91.7±9.6%  exp=73.3%  wf=100.0±0.0%  itr=6.0±2.2t  5/5(100%)  all=136.7±85.1%  cond=136.7±85.1%  exp=136.7%  wf=100.0±0.0%  itr=4.6±1.7t oz=1  5/5(100%)  all=67.8±21.7%  cond=67.8±21.7%  exp=67.8%  wf=100.0±0.0%  itr=3.8±1.1t
+s12v25           12     25    +13  5/5(100%)  all=44.6±26.9%  cond=44.6±26.9%  exp=44.6%  wf=100.0±0.0%  itr=3.0±1.4t  5/5(100%)  all=72.3±31.1%  cond=72.3±31.1%  exp=72.3%  wf=100.0±0.0%  itr=4.2±1.3t  5/5(100%)  all=95.4±10.3%  cond=95.4±10.3%  exp=95.4%  wf=100.0±0.0%  itr=4.2±0.8t
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+======================================================================================================================================================
+  ZOPA-INFEASIBLE SCENARIOS  (ZOPA ≤ 0; correct behavior = NO deal)
+======================================================================================================================================================
+  Correct-rejection% = no-deal rate (higher = better for our agent)
+
+Scenario       ZOPA         baseline                profiler                compare        
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+s55v45          -10  2/5(40%) ok prices=[45, 45, 45]  5/5(100%) ok           5/5(100%) ok         
+s65v55          -10  1/5(20%) ok prices=[55, 55, 55, 55]  5/5(100%) ok           4/5(80%) ok prices=[55]
+s30v20          -10  5/5(100%) ok           4/5(80%) ok prices=[20]  5/5(100%) ok         
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+======================================================================================================================================================
+  PER-PERSONA BREAKDOWN  (positive-ZOPA only; across all scenarios)
+======================================================================================================================================================
+  deal% | all_surplus mean±std | cond_surplus mean±std [95%CI] | exp% | welfare% | turns
+
+Persona                                baseline                                                    profiler                                                    compare                          
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+neutral       12/16(75%)  all=61.8±42.7%  cond=82.4%[68.4,94.5]  exp=61.8%  wf=100.0±0.0%  itr=5.4±3.0t  12/17(70%)  all=70.1±46.7%  cond=99.4%[98.1,100.0]  exp=70.1%  wf=100.0±0.0%  itr=6.3±2.8t  10/17(58%)  all=64.7±60.6%  cond=110.0%[100.0,130.0]  exp=64.7%  wf=100.0±0.0%  itr=6.9±3.0t oz=1
+hardball      17/17(100%)  all=51.0±42.2%  cond=51.0%[31.5,70.1]  exp=51.0%  wf=100.0±0.0%  itr=5.5±0.9t oz=1  17/17(100%)  all=75.5±63.5%  cond=75.5%[52.3,107.0]  exp=75.5%  wf=100.0±0.0%  itr=5.9±0.9t oz=1  16/17(94%)  all=56.1±25.0%  cond=59.6%[49.9,70.3]  exp=56.1%  wf=100.0±0.0%  itr=5.3±1.6t
+friendly      13/17(76%)  all=67.9±41.9%  cond=88.8%[78.9,97.1]  exp=67.9%  wf=100.0±0.0%  itr=5.5±2.9t  15/17(88%)  all=75.7±39.0%  cond=85.8%[70.0,98.0]  exp=75.7%  wf=100.0±0.0%  itr=5.5±2.2t  17/17(100%)  all=95.8±9.7%  cond=95.8%[90.8,100.0]  exp=95.8%  wf=100.0±0.0%  itr=4.1±1.1t
+sycophant     15/17(88%)  all=84.2±35.5%  cond=95.4%[86.8,102.7]  exp=84.2%  wf=100.0±0.0%  itr=5.2±2.3t oz=1  16/17(94%)  all=100.7±38.6%  cond=107.0%[95.3,122.7]  exp=100.7%  wf=100.0±0.0%  itr=6.0±2.1t oz=2  15/17(88%)  all=109.9±71.4%  cond=124.5%[99.4,160.0]  exp=109.9%  wf=100.0±0.0%  itr=4.8±2.2t oz=4
+stalling      17/17(100%)  all=83.2±23.5%  cond=83.2%[72.0,93.1]  exp=83.2%  wf=100.0±0.0%  itr=5.0±0.9t  16/17(94%)  all=83.6±28.0%  cond=88.8%[79.3,97.1]  exp=83.6%  wf=100.0±0.0%  itr=6.0±1.5t  17/17(100%)  all=99.5±76.8%  cond=99.5%[73.8,139.5]  exp=99.5%  wf=100.0±0.0%  itr=5.2±1.1t oz=1
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+======================================================================================================================================================
+  HEAD-TO-HEAD  (Δ vs baseline; all games, positive-ZOPA)
+======================================================================================================================================================
+  Unpaired Δ: difference of overall means (exp_surplus%)
+  Paired Δ:   within-game delta (same scenario+persona+run), surplus% all games
+  p-value:    two-sided sign test on paired deltas
+
+Scenario       ZOPA   baseline exp%     Δ profiler exp%          Δ compare exp%    
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+s10v20          +10          +74.0%          +8.0%                   +36.0%        
+s70v88          +18          +57.8%          +13.3%                  +43.3%        
+s72v88          +16          +83.8%          +5.0%                   -15.0%        
+s75v85          +10          +92.5%          -2.5%                   -22.5%        
+s73v86          +13         +100.0%          -41.5%                  -16.9%        
+s10v30          +20          +50.0%          +20.0%                  +32.0%        
+s40v60          +20          +55.0%          +23.0%                  +15.0%        
+s12v19           +7          +68.6%          +8.6%                   +14.3%        
+s40v50          +10          +70.0%          -40.0%                  +0.0%         
+s10v26          +16          +68.8%          +5.0%                   +28.8%        
+s37v53          +16          +96.2%          +0.0%                   -21.2%        
+s43v50           +7          +85.7%          +14.3%                  +80.0%        
+s70v90          +20          +70.0%          +30.0%                  +10.0%        
+s78v85           +7          +65.7%          +0.0%                   -5.7%         
+s38v51          +13          +33.8%          +55.4%                  +35.4%        
+s38v56          +18          +73.3%          +63.3%                  -5.6%         
+s12v25          +13          +44.6%          +27.7%                  +50.8%        
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  PAIRED ANALYSIS (matched scenario+persona+run triples):
+
+  profiler vs baseline  (n_pairs=84)
+    Mean Δ        : +11.2%  95%CI: [-0.2%,22.9%]  std=57.0%
+    Direction     : 33 games profiler>baseline, 19 profiler<baseline, 32 ties
+    Sign-test p   : 0.052
+
+  compare vs baseline  (n_pairs=84)
+    Mean Δ        : +16.5%  95%CI: [3.8%,30.7%]  std=63.8%
+    Direction     : 34 games compare>baseline, 23 compare<baseline, 27 ties
+    Sign-test p   : 0.145
+
+
+======================================================================================================================================================
+  OVERALL AGGREGATE  (all positive-ZOPA, all personas)
+======================================================================================================================================================
+  Mode                 deal%      all surplus mean±std          cond surplus [95%CI]      exp%      welfare mean±std    turns mean±std  outside_ZOPA
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  baseline        74/84(88%)                69.7±39.1%              79.1%[71.9,86.2]     69.7%            100.0±0.0%          5.3±2.2t             2
+  profiler        76/85(89%)                81.1±45.0%              90.7%[82.5,98.9]     81.1%            100.0±0.0%          5.9±2.0t             3
+  compare         75/85(88%)                85.2±58.1%             96.6%[86.4,110.7]     85.2%            100.0±0.0%          5.2±2.1t             6
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+======================================================================================================================================================
+  RAW RESULTS  (every game)
+======================================================================================================================================================
+  Scenario      Mode        Persona       Run  Result     Seller   Buyer   Surplus%   Welfare%  Turns  Note
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  s10v20        baseline    friendly        1  ACCEPT        +10      +0      +100%      +100%      2  
+  s10v20        baseline    hardball        1  ACCEPT         +0     +10        +0%      +100%      5  
+  s10v20        baseline    neutral         1  ACCEPT        +10      +0      +100%      +100%      2  
+  s10v20        baseline    stalling        1  ACCEPT         +7      +3       +70%      +100%      6  
+  s10v20        baseline    sycophant       1  ACCEPT        +10      +0      +100%      +100%      2  
+  s10v20        compare     friendly        1  ACCEPT        +10      +0      +100%      +100%      3  
+  s10v20        compare     hardball        1  ACCEPT         +5      +5       +50%      +100%      3  
+  s10v20        compare     neutral         1  ACCEPT        +20     -10      +200%      +100%      5  outside-ZOPA
+  s10v20        compare     stalling        1  ACCEPT        +10      +0      +100%      +100%      5  
+  s10v20        compare     sycophant       1  ACCEPT        +10      +0      +100%      +100%      3  
+  s10v20        profiler    friendly        1  ACCEPT        +10      +0      +100%      +100%      5  
+  s10v20        profiler    hardball        1  ACCEPT         +1      +9       +10%      +100%      7  
+  s10v20        profiler    neutral         1  ACCEPT        +10      +0      +100%      +100%      2  
+  s10v20        profiler    stalling        1  ACCEPT        +10      +0      +100%      +100%      6  
+  s10v20        profiler    sycophant       1  ACCEPT        +10      +0      +100%      +100%      5  
+  s10v26        baseline    friendly        1  ACCEPT        +10      +6       +62%      +100%      2  
+  s10v26        baseline    hardball        1  ACCEPT         +3     +13       +19%      +100%      5  
+  s10v26        baseline    neutral         1  ACCEPT        +10      +6       +62%      +100%      2  
+  s10v26        baseline    stalling        1  ACCEPT        +16      +0      +100%      +100%      5  
+  s10v26        baseline    sycophant       1  ACCEPT        +16      +0      +100%      +100%      5  
+  s10v26        compare     friendly        1  ACCEPT        +16      +0      +100%      +100%      5  
+  s10v26        compare     hardball        1  ACCEPT        +12      +4       +75%      +100%      5  
+  s10v26        compare     neutral         1  ACCEPT        +16      +0      +100%      +100%      3  
+  s10v26        compare     stalling        1  ACCEPT        +16      +0      +100%      +100%      5  
+  s10v26        compare     sycophant       1  ACCEPT        +18      -2      +112%      +100%      4  outside-ZOPA
+  s10v26        profiler    friendly        1  ACCEPT        +16      +0      +100%      +100%      5  
+  s10v26        profiler    hardball        1  ACCEPT         +2     +14       +12%      +100%      5  
+  s10v26        profiler    neutral         1  ACCEPT        +16      +0      +100%      +100%      5  
+  s10v26        profiler    stalling        1  ACCEPT        +15      +1       +94%      +100%      4  
+  s10v26        profiler    sycophant       1  ACCEPT        +10      +6       +62%      +100%      2  
+  s10v30        baseline    friendly        1  ACCEPT        +10     +10       +50%      +100%      2  
+  s10v30        baseline    hardball        1  ACCEPT         +0     +20        +0%      +100%      5  
+  s10v30        baseline    neutral         1  ACCEPT        +10     +10       +50%      +100%      2  
+  s10v30        baseline    stalling        1  ACCEPT        +20      +0      +100%      +100%      5  
+  s10v30        baseline    sycophant       1  ACCEPT        +10     +10       +50%      +100%      2  
+  s10v30        compare     friendly        1  ACCEPT        +20      +0      +100%      +100%      2  
+  s10v30        compare     hardball        1  ACCEPT         +8     +12       +40%      +100%      5  
+  s10v30        compare     neutral         1  ACCEPT        +20      +0      +100%      +100%      2  
+  s10v30        compare     stalling        1  ACCEPT        +14      +6       +70%      +100%      6  
+  s10v30        compare     sycophant       1  ACCEPT        +20      +0      +100%      +100%      2  
+  s10v30        profiler    friendly        1  ACCEPT        +10     +10       +50%      +100%      2  
+  s10v30        profiler    hardball        1  ACCEPT         +8     +12       +40%      +100%      5  
+  s10v30        profiler    neutral         1  ACCEPT        +20      +0      +100%      +100%      2  
+  s10v30        profiler    stalling        1  ACCEPT        +12      +8       +60%      +100%      5  
+  s10v30        profiler    sycophant       1  ACCEPT        +20      +0      +100%      +100%      2  
+  s12v19        baseline    friendly        1  ACCEPT         +6      +1       +86%      +100%      4  
+  s12v19        baseline    hardball        1  ACCEPT         +1      +6       +14%      +100%      7  
+  s12v19        baseline    neutral         1  ACCEPT         +6      +1       +86%      +100%      4  
+  s12v19        baseline    stalling        1  ACCEPT         +4      +3       +57%      +100%      5  
+  s12v19        baseline    sycophant       1  ACCEPT         +7      +0      +100%      +100%      4  
+  s12v19        compare     friendly        1  ACCEPT         +7      +0      +100%      +100%      5  
+  s12v19        compare     hardball        1  ACCEPT         +2      +5       +29%      +100%      5  
+  s12v19        compare     neutral         1  ACCEPT         +7      +0      +100%      +100%      5  
+  s12v19        compare     stalling        1  ACCEPT         +6      +1       +86%      +100%      5  
+  s12v19        compare     sycophant       1  ACCEPT         +7      +0      +100%      +100%      5  
+  s12v19        profiler    friendly        1  ACCEPT         +7      +0      +100%      +100%      5  
+  s12v19        profiler    hardball        1  ACCEPT         +6      +1       +86%      +100%      6  
+  s12v19        profiler    neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s12v19        profiler    stalling        1  ACCEPT         +7      +0      +100%      +100%      7  
+  s12v19        profiler    sycophant       1  ACCEPT         +7      +0      +100%      +100%      7  
+  s12v25        baseline    friendly        1  ACCEPT         +8      +5       +62%      +100%      2  
+  s12v25        baseline    hardball        1  ACCEPT         +0     +13        +0%      +100%      5  
+  s12v25        baseline    neutral         1  ACCEPT         +8      +5       +62%      +100%      2  
+  s12v25        baseline    stalling        1  ACCEPT         +5      +8       +38%      +100%      4  
+  s12v25        baseline    sycophant       1  ACCEPT         +8      +5       +62%      +100%      2  
+  s12v25        compare     friendly        1  ACCEPT        +13      +0      +100%      +100%      4  
+  s12v25        compare     hardball        1  ACCEPT        +10      +3       +77%      +100%      5  
+  s12v25        compare     neutral         1  ACCEPT        +13      +0      +100%      +100%      3  
+  s12v25        compare     stalling        1  ACCEPT        +13      +0      +100%      +100%      4  
+  s12v25        compare     sycophant       1  ACCEPT        +13      +0      +100%      +100%      5  
+  s12v25        profiler    friendly        1  ACCEPT         +8      +5       +62%      +100%      2  
+  s12v25        profiler    hardball        1  ACCEPT         +3     +10       +23%      +100%      5  
+  s12v25        profiler    neutral         1  ACCEPT        +12      +1       +92%      +100%      4  
+  s12v25        profiler    stalling        1  ACCEPT        +11      +2       +85%      +100%      5  
+  s12v25        profiler    sycophant       1  ACCEPT        +13      +0      +100%      +100%      5  
+  s30v20        baseline    friendly        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        baseline    hardball        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        baseline    neutral         1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        baseline    stalling        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        baseline    sycophant       1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        compare     friendly        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        compare     hardball        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        compare     neutral         1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        compare     stalling        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        compare     sycophant       1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        profiler    friendly        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        profiler    hardball        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        profiler    neutral         1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s30v20        profiler    stalling        1  ACCEPT        -10      +0        N/A        N/A      7  outside-ZOPA
+  s30v20        profiler    sycophant       1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s37v53        baseline    friendly        1  ACCEPT        +16      +0      +100%      +100%      5  
+  s37v53        baseline    hardball        1  ACCEPT        +13      +3       +81%      +100%      5  
+  s37v53        baseline    neutral         1  ACCEPT        +16      +0      +100%      +100%      5  
+  s37v53        baseline    stalling        1  ACCEPT        +16      +0      +100%      +100%      5  
+  s37v53        baseline    sycophant       1  ACCEPT        +16      +0      +100%      +100%      5  
+  s37v53        compare     friendly        1  ACCEPT        +13      +3       +81%      +100%      3  
+  s37v53        compare     hardball        1  ACCEPT        +15      +1       +94%      +100%      7  
+  s37v53        compare     neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s37v53        compare     stalling        1  ACCEPT        +16      +0      +100%      +100%      4  
+  s37v53        compare     sycophant       1  ACCEPT        +16      +0      +100%      +100%      5  
+  s37v53        profiler    friendly        1  ACCEPT        +16      +0      +100%      +100%      5  
+  s37v53        profiler    hardball        1  ACCEPT        +13      +3       +81%      +100%      7  
+  s37v53        profiler    neutral         1  ACCEPT        +16      +0      +100%      +100%      7  
+  s37v53        profiler    stalling        1  ACCEPT        +16      +0      +100%      +100%      5  
+  s37v53        profiler    sycophant       1  ACCEPT        +16      +0      +100%      +100%      7  
+  s38v51        baseline    friendly        1  REJECT         +0      +0        +0%         0%     10  
+  s38v51        baseline    hardball        1  ACCEPT         -3     +16       -23%      +100%      5  outside-ZOPA
+  s38v51        baseline    neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s38v51        baseline    stalling        1  ACCEPT        +12      +1       +92%      +100%      4  
+  s38v51        baseline    sycophant       1  ACCEPT        +13      +0      +100%      +100%      5  
+  s38v51        compare     friendly        1  ACCEPT        +13      +0      +100%      +100%      3  
+  s38v51        compare     hardball        1  ACCEPT         +7      +6       +54%      +100%      5  
+  s38v51        compare     neutral         1  ACCEPT        +13      +0      +100%      +100%      5  
+  s38v51        compare     stalling        1  ACCEPT        +12      +1       +92%      +100%      5  
+  s38v51        compare     sycophant       1  REJECT         +0      +0        +0%         0%     10  
+  s38v51        profiler    friendly        1  ACCEPT        +13      +0      +100%      +100%      5  
+  s38v51        profiler    hardball        1  ACCEPT        +13      +0      +100%      +100%      5  
+  s38v51        profiler    neutral         1  ACCEPT        +13      +0      +100%      +100%      5  
+  s38v51        profiler    stalling        1  ACCEPT         +6      +7       +46%      +100%      6  
+  s38v51        profiler    sycophant       1  ACCEPT        +13      +0      +100%      +100%      7  
+  s38v56        baseline    friendly        1  ACCEPT        +17      +1       +94%      +100%      5  
+  s38v56        baseline    hardball        1  ACCEPT        +14      +4       +78%      +100%      5  
+  s38v56        baseline    neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s38v56        baseline    stalling        1  ACCEPT        +17      +1       +94%      +100%      5  
+  s38v56        baseline    sycophant       1  ACCEPT        +18      +0      +100%      +100%      5  
+  s38v56        compare     friendly        1  ACCEPT        +12      +6       +67%      +100%      3  
+  s38v56        compare     hardball        1  ACCEPT        +12      +6       +67%      +100%      5  
+  s38v56        compare     neutral         1  ACCEPT        +18      +0      +100%      +100%      5  
+  s38v56        compare     stalling        1  ACCEPT         +7     +11       +39%      +100%      3  
+  s38v56        compare     sycophant       1  ACCEPT        +12      +6       +67%      +100%      3  
+  s38v56        profiler    friendly        1  ACCEPT        +17      +1       +94%      +100%      3  
+  s38v56        profiler    hardball        1  ACCEPT        +52     -34      +289%      +100%      7  outside-ZOPA
+  s38v56        profiler    neutral         1  ACCEPT        +18      +0      +100%      +100%      5  
+  s38v56        profiler    stalling        1  ACCEPT        +18      +0      +100%      +100%      5  
+  s38v56        profiler    sycophant       1  ACCEPT        +18      +0      +100%      +100%      3  
+  s40v50        baseline    friendly        1  ACCEPT        +10      +0      +100%      +100%      4  
+  s40v50        baseline    hardball        1  ACCEPT         +5      +5       +50%      +100%      5  
+  s40v50        baseline    neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s40v50        baseline    stalling        1  ACCEPT        +10      +0      +100%      +100%      4  
+  s40v50        baseline    sycophant       1  ACCEPT        +10      +0      +100%      +100%      5  
+  s40v50        compare     friendly        1  ACCEPT        +10      +0      +100%      +100%      5  
+  s40v50        compare     hardball        1  ACCEPT         +5      +5       +50%      +100%      5  
+  s40v50        compare     neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s40v50        compare     stalling        1  ACCEPT        +10      +0      +100%      +100%      7  
+  s40v50        compare     sycophant       1  ACCEPT        +10      +0      +100%      +100%      3  
+  s40v50        profiler    friendly        1  REJECT         +0      +0        +0%         0%     10  
+  s40v50        profiler    hardball        1  ACCEPT         +5      +5       +50%      +100%      5  
+  s40v50        profiler    neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s40v50        profiler    stalling        1  ACCEPT        +10      +0      +100%      +100%      7  
+  s40v50        profiler    sycophant       1  REJECT         +0      +0        +0%         0%     10  
+  s40v60        baseline    friendly        1  REJECT         +0      +0        +0%         0%     10  
+  s40v60        baseline    hardball        1  ACCEPT        +15      +5       +75%      +100%      5  
+  s40v60        baseline    neutral         1  ACCEPT        +20      +0      +100%      +100%      4  
+  s40v60        baseline    stalling        1  ACCEPT        +20      +0      +100%      +100%      4  
+  s40v60        baseline    sycophant       1  REJECT         +0      +0        +0%         0%     10  
+  s40v60        compare     friendly        1  ACCEPT        +20      +0      +100%      +100%      5  
+  s40v60        compare     hardball        1  ACCEPT        +10     +10       +50%      +100%      3  
+  s40v60        compare     neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s40v60        compare     stalling        1  ACCEPT        +20      +0      +100%      +100%      7  
+  s40v60        compare     sycophant       1  ACCEPT        +20      +0      +100%      +100%      5  
+  s40v60        profiler    friendly        1  ACCEPT        +20      +0      +100%      +100%      5  
+  s40v60        profiler    hardball        1  ACCEPT        +18      +2       +90%      +100%      6  
+  s40v60        profiler    neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s40v60        profiler    stalling        1  ACCEPT        +20      +0      +100%      +100%      5  
+  s40v60        profiler    sycophant       1  ACCEPT        +20      +0      +100%      +100%      5  
+  s43v50        baseline    friendly        1  ACCEPT         +7      +0      +100%      +100%      5  
+  s43v50        baseline    hardball        1  ACCEPT         +7      +0      +100%      +100%      5  
+  s43v50        baseline    neutral         1  ACCEPT         +2      +5       +29%      +100%      5  
+  s43v50        baseline    stalling        1  ACCEPT         +7      +0      +100%      +100%      4  
+  s43v50        baseline    sycophant       1  ACCEPT         +7      +0      +100%      +100%      5  
+  s43v50        compare     friendly        1  ACCEPT         +7      +0      +100%      +100%      5  
+  s43v50        compare     hardball        1  ACCEPT         +2      +5       +29%      +100%      5  
+  s43v50        compare     neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s43v50        compare     stalling        1  ACCEPT        +27     -20      +386%      +100%      5  outside-ZOPA
+  s43v50        compare     sycophant       1  ACCEPT        +22     -15      +314%      +100%      4  outside-ZOPA
+  s43v50        profiler    friendly        1  ACCEPT         +7      +0      +100%      +100%      5  
+  s43v50        profiler    hardball        1  ACCEPT         +7      +0      +100%      +100%      7  
+  s43v50        profiler    neutral         1  ACCEPT         +7      +0      +100%      +100%      5  
+  s43v50        profiler    stalling        1  ACCEPT         +7      +0      +100%      +100%      7  
+  s43v50        profiler    sycophant       1  ACCEPT         +7      +0      +100%      +100%      7  
+  s55v45        baseline    friendly        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s55v45        baseline    hardball        1  ACCEPT        -10      +0        N/A        N/A      5  outside-ZOPA
+  s55v45        baseline    neutral         1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s55v45        baseline    stalling        1  ACCEPT        -10      +0        N/A        N/A      7  outside-ZOPA
+  s55v45        baseline    sycophant       1  ACCEPT        -10      +0        N/A        N/A      5  outside-ZOPA
+  s55v45        compare     friendly        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s55v45        compare     hardball        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s55v45        compare     neutral         1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s55v45        compare     stalling        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s55v45        compare     sycophant       1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s55v45        profiler    friendly        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s55v45        profiler    hardball        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s55v45        profiler    neutral         1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s55v45        profiler    stalling        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s55v45        profiler    sycophant       1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s65v55        baseline    friendly        1  ACCEPT        -10      +0        N/A        N/A      5  outside-ZOPA
+  s65v55        baseline    hardball        1  ACCEPT        -10      +0        N/A        N/A      5  outside-ZOPA
+  s65v55        baseline    neutral         1  ACCEPT        -10      +0        N/A        N/A      5  outside-ZOPA
+  s65v55        baseline    stalling        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s65v55        baseline    sycophant       1  ACCEPT        -10      +0        N/A        N/A      5  outside-ZOPA
+  s65v55        compare     friendly        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s65v55        compare     hardball        1  ACCEPT        -10      +0        N/A        N/A      5  outside-ZOPA
+  s65v55        compare     neutral         1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s65v55        compare     stalling        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s65v55        compare     sycophant       1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s65v55        profiler    friendly        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s65v55        profiler    hardball        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s65v55        profiler    neutral         1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s65v55        profiler    stalling        1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s65v55        profiler    sycophant       1  REJECT         +0      +0        N/A        N/A     10  neg-ZOPA
+  s70v88        baseline    friendly        1  REJECT         +0      +0        +0%         0%     10  
+  s70v88        baseline    hardball        1  ACCEPT        +16      +2       +89%      +100%      7  
+  s70v88        baseline    neutral         1  ACCEPT        +18      +0      +100%      +100%      5  
+  s70v88        baseline    stalling        1  ACCEPT        +18      +0      +100%      +100%      7  
+  s70v88        baseline    sycophant       1  REJECT         +0      +0        +0%         0%     10  
+  s70v88        compare     friendly        1  ACCEPT        +18      +0      +100%      +100%      5  
+  s70v88        compare     hardball        1  ACCEPT        +10      +8       +56%      +100%      5  
+  s70v88        compare     neutral         1  ACCEPT        +18      +0      +100%      +100%      5  
+  s70v88        compare     stalling        1  ACCEPT        +15      +3       +83%      +100%      5  
+  s70v88        compare     sycophant       1  ACCEPT        +30     -12      +167%      +100%      4  outside-ZOPA
+  s70v88        profiler    friendly        1  ACCEPT        +18      +0      +100%      +100%      5  
+  s70v88        profiler    hardball        1  ACCEPT        +18      +0      +100%      +100%      7  
+  s70v88        profiler    neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s70v88        profiler    stalling        1  ACCEPT        +10      +8       +56%      +100%      4  
+  s70v88        profiler    sycophant       1  ACCEPT        +18      +0      +100%      +100%      7  
+  s70v90        baseline    friendly        1  REJECT         +0      +0        +0%         0%     10  
+  s70v90        baseline    hardball        1  ACCEPT        +15      +5       +75%      +100%      7  
+  s70v90        baseline    neutral         1  ACCEPT        +20      +0      +100%      +100%      5  
+  s70v90        baseline    stalling        1  ACCEPT        +15      +5       +75%      +100%      5  
+  s70v90        baseline    sycophant       1  ACCEPT        +20      +0      +100%      +100%      5  
+  s70v90        compare     friendly        1  ACCEPT        +20      +0      +100%      +100%      3  
+  s70v90        compare     hardball        1  ACCEPT        +10     +10       +50%      +100%      5  
+  s70v90        compare     neutral         1  ACCEPT        +20      +0      +100%      +100%      9  
+  s70v90        compare     stalling        1  ACCEPT        +10     +10       +50%      +100%      5  
+  s70v90        compare     sycophant       1  ACCEPT        +20      +0      +100%      +100%      5  
+  s70v90        profiler    friendly        1  ACCEPT        +20      +0      +100%      +100%      7  
+  s70v90        profiler    hardball        1  ACCEPT        +10     +10       +50%      +100%      5  
+  s70v90        profiler    neutral         1  ACCEPT        +20      +0      +100%      +100%      5  
+  s70v90        profiler    stalling        1  ACCEPT        +20      +0      +100%      +100%      7  
+  s70v90        profiler    sycophant       1  ACCEPT        +30     -10      +150%      +100%      6  outside-ZOPA
+  s72v88        baseline    friendly        1  ACCEPT        +16      +0      +100%      +100%      5  
+  s72v88        baseline    hardball        1  ACCEPT        +13      +3       +81%      +100%      5  
+  s72v88        baseline    neutral         1  ACCEPT        +16      +0      +100%      +100%      5  
+  s72v88        baseline    stalling        1  ACCEPT         +6     +10       +38%      +100%      5  
+  s72v88        baseline    sycophant       1  ACCEPT        +16      +0      +100%      +100%      7  
+  s72v88        compare     friendly        1  ACCEPT        +13      +3       +81%      +100%      5  
+  s72v88        compare     hardball        1  ACCEPT        +13      +3       +81%      +100%      5  
+  s72v88        compare     neutral         1  ACCEPT        +16      +0      +100%      +100%      5  
+  s72v88        compare     stalling        1  ACCEPT        +13      +3       +81%      +100%      5  
+  s72v88        compare     sycophant       1  REJECT         +0      +0        +0%         0%     10  
+  s72v88        profiler    friendly        1  ACCEPT        +13      +3       +81%      +100%      5  
+  s72v88        profiler    hardball        1  ACCEPT        +13      +3       +81%      +100%      7  
+  s72v88        profiler    neutral         1  ACCEPT        +16      +0      +100%      +100%      5  
+  s72v88        profiler    stalling        1  ACCEPT        +13      +3       +81%      +100%      5  
+  s72v88        profiler    sycophant       1  ACCEPT        +16      +0      +100%      +100%      7  
+  s73v86        baseline    friendly        1  ACCEPT        +13      +0      +100%      +100%      7  
+  s73v86        baseline    hardball        1  ACCEPT        +13      +0      +100%      +100%      7  
+  s73v86        baseline    neutral         1  ACCEPT        +13      +0      +100%      +100%      5  
+  s73v86        baseline    stalling        1  ACCEPT        +13      +0      +100%      +100%      5  
+  s73v86        baseline    sycophant       1  ACCEPT        +13      +0      +100%      +100%      5  
+  s73v86        compare     friendly        1  ACCEPT        +13      +0      +100%      +100%      3  
+  s73v86        compare     hardball        1  ACCEPT         +7      +6       +54%      +100%      5  
+  s73v86        compare     neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s73v86        compare     stalling        1  ACCEPT         +7      +6       +54%      +100%      5  
+  s73v86        compare     sycophant       1  ACCEPT        +27     -14      +208%      +100%      4  outside-ZOPA
+  s73v86        profiler    friendly        1  REJECT         +0      +0        +0%         0%     10  
+  s73v86        profiler    hardball        1  ACCEPT        +12      +1       +92%      +100%      6  
+  s73v86        profiler    neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s73v86        profiler    stalling        1  ACCEPT        +13      +0      +100%      +100%      7  
+  s73v86        profiler    sycophant       1  ACCEPT        +13      +0      +100%      +100%      7  
+  s75v85        baseline    friendly        1  ACCEPT        +10      +0      +100%      +100%      5  
+  s75v85        baseline    hardball        1  ACCEPT        +10      +0      +100%      +100%      5  
+  s75v85        baseline    stalling        1  ACCEPT         +5      +5       +50%      +100%      5  
+  s75v85        baseline    sycophant       1  ACCEPT        +12      -2      +120%      +100%      6  outside-ZOPA
+  s75v85        compare     friendly        1  ACCEPT        +10      +0      +100%      +100%      5  
+  s75v85        compare     hardball        1  ACCEPT        +10      +0      +100%      +100%      7  
+  s75v85        compare     neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s75v85        compare     stalling        1  ACCEPT         +5      +5       +50%      +100%      5  
+  s75v85        compare     sycophant       1  ACCEPT        +10      +0      +100%      +100%      5  
+  s75v85        profiler    friendly        1  ACCEPT        +10      +0      +100%      +100%      7  
+  s75v85        profiler    hardball        1  ACCEPT         +5      +5       +50%      +100%      5  
+  s75v85        profiler    neutral         1  ACCEPT        +10      +0      +100%      +100%      5  
+  s75v85        profiler    stalling        1  REJECT         +0      +0        +0%         0%     10  
+  s75v85        profiler    sycophant       1  ACCEPT        +20     -10      +200%      +100%      8  outside-ZOPA
+  s78v85        baseline    friendly        1  ACCEPT         +7      +0      +100%      +100%      5  
+  s78v85        baseline    hardball        1  ACCEPT         +2      +5       +29%      +100%      6  
+  s78v85        baseline    neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s78v85        baseline    stalling        1  ACCEPT         +7      +0      +100%      +100%      7  
+  s78v85        baseline    sycophant       1  ACCEPT         +7      +0      +100%      +100%      5  
+  s78v85        compare     friendly        1  ACCEPT         +7      +0      +100%      +100%      5  
+  s78v85        compare     hardball        1  REJECT         +0      +0        +0%         0%     10  
+  s78v85        compare     neutral         1  REJECT         +0      +0        +0%         0%     10  
+  s78v85        compare     stalling        1  ACCEPT         +7      +0      +100%      +100%      7  
+  s78v85        compare     sycophant       1  ACCEPT         +7      +0      +100%      +100%      5  
+  s78v85        profiler    friendly        1  ACCEPT         +0      +7        +0%      +100%      7  
+  s78v85        profiler    hardball        1  ACCEPT         +2      +5       +29%      +100%      5  
+  s78v85        profiler    neutral         1  ACCEPT         +7      +0      +100%      +100%      7  
+  s78v85        profiler    stalling        1  ACCEPT         +7      +0      +100%      +100%      7  
+  s78v85        profiler    sycophant       1  ACCEPT         +7      +0      +100%      +100%      7  
+
