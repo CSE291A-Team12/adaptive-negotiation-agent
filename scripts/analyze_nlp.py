@@ -155,6 +155,77 @@ def find_latest_framework_log(game_dir):
     return subdirs[0] if subdirs else None
 
 
+def parse_game_state_profiler_logs(game_state_path):
+    """Extract complete profiler_logs from game_state.json.
+
+    Returns list of dicts: {opponent_message: str, profiler_output: str}
+    Each entry is one profiler call (one per our agent's turn in profiler mode).
+    """
+    with open(game_state_path) as f:
+        state = json.load(f)
+
+    # profiler_logs lives under the profiler player entry in the players list
+    raw_logs = state.get("profiler_logs", [])
+    if not raw_logs:
+        players = state.get("players", [])
+        for player in (players if isinstance(players, list) else []):
+            if isinstance(player, dict) and "profiler_logs" in player:
+                raw_logs = player["profiler_logs"]
+                break
+    parsed = []
+    for entry in raw_logs:
+        if isinstance(entry, list) and len(entry) == 2:
+            opponent_msg = entry[0]
+            profiler_out = entry[1]
+            # opponent_msg is either a dict {role, content} or a string
+            if isinstance(opponent_msg, dict):
+                opponent_msg = opponent_msg.get("content", "")
+            parsed.append({
+                "opponent_message": str(opponent_msg),
+                "profiler_output": str(profiler_out),
+            })
+    return parsed
+
+
+# ── Filtering ────────────────────────────────────────────────────────
+
+def parse_filters(filter_strings):
+    """Parse filter strings like 'mode=profiler' into {key: [values]} dict."""
+    filters = {}
+    if not filter_strings:
+        return filters
+    for fs in filter_strings:
+        if "=" not in fs:
+            print(f"  Warning: ignoring malformed filter '{fs}' (expected key=value)",
+                  file=sys.stderr)
+            continue
+        key, val = fs.split("=", 1)
+        # Support comma-separated values for OR: persona=hardball,friendly
+        filters[key.strip()] = [v.strip() for v in val.split(",")]
+    return filters
+
+
+def filter_games(games, filters):
+    """Filter list of game dicts by key=value criteria.
+
+    Each filter key must match one of the comma-separated values.
+    All filters must match (AND across keys, OR within values).
+    """
+    if not filters:
+        return games
+    filtered = []
+    for g in games:
+        match = True
+        for key, allowed_values in filters.items():
+            game_val = str(g.get(key, ""))
+            if game_val not in allowed_values:
+                match = False
+                break
+        if match:
+            filtered.append(g)
+    return filtered
+
+
 def parse_game_log_setup(game_log_path):
     """Extract model names and persona prompt from game.log SETUP section."""
     with open(game_log_path) as f:
@@ -223,16 +294,26 @@ def parse_single_game(game_dir, exp_name):
             with open(ilog) as f:
                 transcript = f.read()
 
-    # Setup metadata + profiler blocks from game.log
+    # Setup metadata from game.log
     game_log = game_dir / "game.log"
     setup_meta = {}
-    profiler_blocks = []
     game_log_text = ""
     if game_log.exists():
         setup_meta = parse_game_log_setup(game_log)
-        profiler_blocks = parse_game_log_profiler_blocks(game_log)
         with open(game_log) as f:
             game_log_text = f.read()
+
+    # Profiler data: prefer game_state.json (complete) over game.log (last block only)
+    profiler_logs_full = []
+    profiler_blocks = []
+    if fw_dir:
+        gs_path = fw_dir / "game_state.json"
+        if gs_path.exists():
+            profiler_logs_full = parse_game_state_profiler_logs(gs_path)
+            profiler_blocks = [p["profiler_output"] for p in profiler_logs_full]
+    if not profiler_blocks and game_log.exists():
+        # Fallback to game.log (only captures last block)
+        profiler_blocks = parse_game_log_profiler_blocks(game_log)
 
     self_role = results.get("self_role", "seller")
     our_player = "BLUE" if self_role == "buyer" else "RED"
@@ -282,6 +363,7 @@ def parse_single_game(game_dir, exp_name):
         "our_model": setup_meta.get("Our agent") or setup_meta.get("Our negotiator"),
         "opponent_model": setup_meta.get("Opponent"),
         "profiler_model": setup_meta.get("Profiler brain"),
+        "num_profiler_calls": len(profiler_logs_full),
         "persona_prompt": setup_meta.get("persona_prompt", ""),
         "game_dir": str(game_dir),
     }
@@ -321,7 +403,7 @@ def parse_single_game(game_dir, exp_name):
             "profiler_analysis": profiler_text,
         })
 
-    return game_row, turn_rows, transcript, game_log_text
+    return game_row, turn_rows, transcript, game_log_text, profiler_logs_full
 
 
 # ── CSV export ────────────────────────────────────────────────────────
@@ -332,7 +414,7 @@ GAME_FIELDS = [
     "final_response", "deal_reached", "deal_price",
     "seller_outcome", "buyer_outcome", "our_outcome", "surplus_pct",
     "num_turns", "first_offer_price", "last_offer_price",
-    "our_model", "opponent_model", "profiler_model",
+    "our_model", "opponent_model", "profiler_model", "num_profiler_calls",
     "persona_prompt", "game_dir",
 ]
 
@@ -438,6 +520,16 @@ def annotate_game(client, model, game_full):
         f"{game_full.get('game_log_text', '(not available)')}"
     )
 
+    # Include complete profiler logs from game_state.json if available
+    prof_logs = game_full.get("profiler_logs", [])
+    if prof_logs:
+        prof_parts = ["\n\n=== COMPLETE PROFILER LOGS (all calls, from game_state.json) ==="]
+        for i, pl in enumerate(prof_logs, 1):
+            prof_parts.append(f"\n--- Profiler Call {i}/{len(prof_logs)} ---")
+            prof_parts.append(f"Opponent said: {pl['opponent_message'][:300]}")
+            prof_parts.append(f"Profiler response:\n{pl['profiler_output']}")
+        user += "\n".join(prof_parts)
+
     raw = llm_call(client, model, ANNOTATE_SYSTEM, user)
 
     # Strip markdown fences if present
@@ -525,6 +617,16 @@ def build_query_context(games_full, annotations):
                     pa = pa[:500] + "..."
                 parts.append(f"    [PROFILER]: {pa}")
 
+        # Include profiler logs if available
+        prof_logs = g.get("profiler_logs", [])
+        if prof_logs:
+            parts.append(f"  [PROFILER CALLS: {len(prof_logs)} total]")
+            for pi, pl in enumerate(prof_logs, 1):
+                opp_msg = pl["opponent_message"][:200]
+                prof_out = pl["profiler_output"][:400]
+                parts.append(f"    Call {pi}: opp={opp_msg}")
+                parts.append(f"      -> {prof_out}")
+
         # Include annotation summary if available
         ann = annotations.get(gid)
         if ann and not ann.get("parse_error"):
@@ -570,7 +672,7 @@ def cmd_parse(args):
     for i, gd in enumerate(game_dirs):
         exp = experiment_name_for(gd, run_dirs)
         try:
-            game_row, turn_rows, transcript, gl_text = parse_single_game(gd, exp)
+            game_row, turn_rows, transcript, gl_text, prof_logs = parse_single_game(gd, exp)
             all_game_rows.append(game_row)
             all_turn_rows.extend(turn_rows)
             all_games.append({
@@ -578,6 +680,7 @@ def cmd_parse(args):
                 "turns": turn_rows,
                 "transcript": transcript,
                 "game_log_text": gl_text,
+                "profiler_logs": prof_logs,
             })
             experiments.add(exp)
         except Exception as e:
@@ -627,6 +730,11 @@ def cmd_annotate(args):
 
     with open(parsed_path) as f:
         games = json.load(f)
+
+    filters = parse_filters(getattr(args, "filter", None))
+    if filters:
+        games = filter_games(games, filters)
+        print(f"Filter applied: {len(games)} games match {filters}")
 
     if args.max_games:
         games = games[: args.max_games]
@@ -680,6 +788,11 @@ def cmd_query(args):
 
     with open(parsed_path) as f:
         games = json.load(f)
+
+    filters = parse_filters(getattr(args, "filter", None))
+    if filters:
+        games = filter_games(games, filters)
+        print(f"Filter applied: {len(games)} games match {filters}")
 
     if args.max_games:
         games = games[: args.max_games]
@@ -754,6 +867,8 @@ def main():
     p.add_argument("--model", default=DEFAULT_MODEL, help=f"Model (default: {DEFAULT_MODEL})")
     p.add_argument("--base-url", default=DEFAULT_API_BASE, help="API base URL")
     p.add_argument("--max-games", type=int, default=None, help="Limit number of games")
+    p.add_argument("--filter", nargs="+", metavar="KEY=VAL",
+                   help="Filter games (e.g. mode=profiler persona=hardball,friendly)")
     p.add_argument("--force", action="store_true", help="Re-annotate cached games")
 
     # query
@@ -764,6 +879,8 @@ def main():
     p.add_argument("--model", default=DEFAULT_MODEL, help=f"Model (default: {DEFAULT_MODEL})")
     p.add_argument("--base-url", default=DEFAULT_API_BASE, help="API base URL")
     p.add_argument("--max-games", type=int, default=None, help="Limit number of games")
+    p.add_argument("--filter", nargs="+", metavar="KEY=VAL",
+                   help="Filter games (e.g. mode=profiler persona=hardball,friendly)")
 
     args = parser.parse_args()
 
