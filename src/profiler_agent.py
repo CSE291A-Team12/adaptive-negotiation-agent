@@ -46,9 +46,15 @@ class ProfilerAgent(Llama.LLama2ChatAgent):
         return result
 
     def run_profiler(self):
+        # Skip the first message (negotiator system prompt) so it doesn't
+        # override the profiler's own instructions.
+        conversation_without_system = [
+            msg for msg in self.conversation
+            if msg.get("role") != self.prompt_entity_initializer
+        ]
         messages = [
             {"role": "system", "content": self.profiler_prompt},
-        ] + self.conversation
+        ] + conversation_without_system
 
         response = self.profiler_client.chat.completions.create(
             model=self.profiler_model,
