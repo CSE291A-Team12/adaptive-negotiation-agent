@@ -468,6 +468,20 @@ agent as upper-bound reference).
 - The opponent is assigned one of 5 personas: neutral, hardball, friendly, \
 sycophant, stalling.
 
+IMPORTANT — flag these as high-significance behaviors whenever they occur:
+- **Economically irrational deals**: seller_outcome < 0 means the seller sold \
+below their own production cost (losing money). buyer_outcome < 0 means the \
+buyer paid more than their willingness to pay. These are always noteworthy.
+- **Surplus > 100%**: surplus_pct > 100 means one party captured more than the \
+entire ZOPA, which is only possible if the other party is losing money on the \
+deal. Flag and explain why.
+- **Persona-inconsistent behavior**: a "hardball" agent making generous offers, \
+a "friendly" agent anchoring aggressively, a "stalling" agent accepting \
+immediately, etc. When the opponent's actual behavior contradicts their assigned \
+persona, flag it — this reveals the opponent LLM failing to follow instructions.
+- **Information leaks**: an agent revealing its private cost, WTP, or internal \
+reasoning (e.g., <reason> tags) in its public message to the other player.
+
 Given a game transcript and metadata, provide structured behavioral analysis.
 Cite exact quotes from the transcript as evidence.
 
@@ -558,12 +572,26 @@ upper-bound reference).
 - surplus_pct = our_outcome / ZOPA * 100 (how much of available surplus \
 our agent captured).
 
+IMPORTANT — always check for and highlight these phenomena:
+- **Economically irrational deals**: seller_outcome < 0 (seller sold below \
+cost) or buyer_outcome < 0 (buyer overpaid). These are LLM agents and CAN \
+behave irrationally — this is a key research finding, not a data error.
+- **Surplus > 100%**: one party captured more than the full ZOPA, meaning the \
+other party lost money. Explain which party acted irrationally and why.
+- **Persona violations**: an agent behaving contrary to its assigned persona \
+(e.g., "hardball" seller offering below cost, "stalling" agent accepting \
+immediately). This reveals the opponent LLM failing to follow persona instructions.
+- **Information leaks**: agents revealing private values (cost, WTP) or internal \
+reasoning in public messages.
+
 When answering:
 1. Be specific — cite game IDs and iteration numbers as [game_id, iter N].
 2. Quote exact text from transcripts when relevant.
 3. Distinguish patterns (across multiple games) from one-off observations.
 4. If data is insufficient, say so.
-5. Use numbers: deal rates, average surplus_pct, price comparisons."""
+5. Use numbers: deal rates, average surplus_pct, price comparisons.
+6. Always flag irrational behavior and persona violations — these are among \
+the most important findings in LLM negotiation research."""
 
 
 def build_query_context(games_full, annotations):
