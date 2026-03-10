@@ -23,8 +23,10 @@ import argparse
 import json
 import sys
 import os
+import threading
 import traceback
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -53,6 +55,19 @@ COMPARE_MODEL = "api-gpt-oss-120b"      # compare: oss static agent (upper-bound
 
 ITERATIONS = 10
 MAX_RETRIES = 3
+
+# Rate limits (RPM) per model — used to compute default --workers
+# api-llama-4-scout: 30 RPM,  api-gpt-oss-120b: 240 RPM
+# ~10 calls/worker/min for scout, ~20 calls/worker/min for oss
+DEFAULT_WORKERS = {
+    "baseline": 3,   # scout-limited (30 RPM / ~10 calls per worker per min)
+    "profiler": 3,   # scout-limited
+    "compare":  8,   # oss-only (240 RPM / ~20 calls per worker per min)
+    "both":     3,   # scout-limited (baseline + profiler share scout)
+    "all":      3,   # scout-limited
+}
+
+_print_lock = threading.Lock()
 
 # 20 (seller_cost, buyer_wtp) scenarios spanning a wide range of ZOPA widths,
 # price levels, and deal feasibility. ZOPA = buyer_wtp - seller_cost; negative = no deal.
@@ -415,9 +430,119 @@ def run_profiler_scenario(persona_label, persona_prompt, self_is_seller, log_dir
     return result, game, profiler_agent
 
 
+# ── Single-task executor (thread-safe) ───────────────────────────────
+
+def _run_single_task(task):
+    """Run one (scenario, persona, run, mode) game. Returns result dict.
+
+    Each task is fully independent — separate agents, separate log dirs.
+    Thread-safe: only writes to its own directory, uses _print_lock for stdout.
+    """
+    current_mode   = task["current_mode"]
+    persona_label  = task["persona_label"]
+    persona_prompt = task["persona_prompt"]
+    self_is_seller = task["self_is_seller"]
+    run_idx        = task["run_idx"]
+    role           = task["role"]
+    scenario_label = task["scenario_label"]
+    seller_cost    = task["seller_cost"]
+    buyer_wtp      = task["buyer_wtp"]
+    paired_log_dir = task["paired_log_dir"]
+    scenario_config = task["scenario_config"]
+    task_id        = task["task_id"]
+    total_tasks    = task["total_tasks"]
+
+    framework_log_dir = os.path.join(paired_log_dir, "framework_logs")
+
+    with _print_lock:
+        print(f"  [{task_id}/{total_tasks}] START  {current_mode:<10} {scenario_label}  {persona_label}  run={run_idx}")
+
+    for attempt in range(MAX_RETRIES):
+        try:
+            if current_mode == "baseline":
+                result, game = run_baseline_scenario(
+                    persona_label, persona_prompt, self_is_seller,
+                    framework_log_dir, scenario_config
+                )
+                write_game_log(
+                    paired_log_dir, current_mode,
+                    persona_label, persona_prompt,
+                    self_is_seller, run_idx,
+                    game, result,
+                    profiler_agent=None,
+                    config=scenario_config,
+                )
+            elif current_mode == "compare":
+                compare_config = {
+                    **scenario_config,
+                    "self_model": scenario_config["compare_model"],
+                }
+                result, game = run_baseline_scenario(
+                    persona_label, persona_prompt, self_is_seller,
+                    framework_log_dir, compare_config
+                )
+                write_game_log(
+                    paired_log_dir, current_mode,
+                    persona_label, persona_prompt,
+                    self_is_seller, run_idx,
+                    game, result,
+                    profiler_agent=None,
+                    config=compare_config,
+                )
+            else:
+                result, game, profiler_agent = run_profiler_scenario(
+                    persona_label, persona_prompt, self_is_seller,
+                    framework_log_dir, scenario_config
+                )
+                write_game_log(
+                    paired_log_dir, current_mode,
+                    persona_label, persona_prompt,
+                    self_is_seller, run_idx,
+                    game, result,
+                    profiler_agent=profiler_agent,
+                    config=scenario_config,
+                )
+
+            result.update({
+                "mode":        current_mode,
+                "persona":     persona_label,
+                "run":         run_idx,
+                "role":        role,
+                "scenario":    scenario_label,
+                "seller_cost": seller_cost,
+                "buyer_wtp":   buyer_wtp,
+            })
+
+            with _print_lock:
+                print(f"  [{task_id}/{total_tasks}] DONE   {current_mode:<10} {scenario_label}  {persona_label}  "
+                      f"run={run_idx}  {result['final_response']}  "
+                      f"seller={result['seller_outcome']}  buyer={result['buyer_outcome']}  "
+                      f"turns={result['num_turns']}")
+            return result
+
+        except Exception as e:
+            with _print_lock:
+                print(f"  [{task_id}/{total_tasks}] RETRY  {current_mode:<10} {scenario_label}  {persona_label}  "
+                      f"attempt {attempt + 1}/{MAX_RETRIES}: {type(e).__name__}: {e}")
+            if attempt >= MAX_RETRIES - 1:
+                with _print_lock:
+                    print(f"  [{task_id}/{total_tasks}] FAILED {current_mode:<10} {scenario_label}  {persona_label}")
+                    traceback.print_exc()
+                return {
+                    "mode":        current_mode,
+                    "persona":     persona_label,
+                    "run":         run_idx,
+                    "role":        role,
+                    "scenario":    scenario_label,
+                    "seller_cost": seller_cost,
+                    "buyer_wtp":   buyer_wtp,
+                    "error":       str(e),
+                }
+
+
 # ── Main experiment loop ─────────────────────────────────────────────
 
-def run_experiments(mode, num_runs, role, num_scenarios=None):
+def run_experiments(mode, num_runs, role, num_scenarios=None, workers=None):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     log_base = os.path.join(BASE_LOG_DIR, f"run_{timestamp}")
     os.makedirs(log_base, exist_ok=True)
@@ -452,119 +577,75 @@ def run_experiments(mode, num_runs, role, num_scenarios=None):
     if mode in ("all", "compare"):
         modes_to_run.append("compare")
 
-    all_results = []
-
-    for scenario_idx, (seller_cost, buyer_wtp) in enumerate(scenarios, start=1):
+    # ── Build task list ──────────────────────────────────────────────
+    tasks = []
+    for seller_cost, buyer_wtp in scenarios:
         scenario_label = f"s{seller_cost}v{buyer_wtp}"
-        zopa = buyer_wtp - seller_cost
         scenario_config = {
             **base_config,
             "seller_cost": seller_cost,
             "buyer_wtp":   buyer_wtp,
             "scenario":    scenario_label,
         }
-
-        print(f"\n{'#' * 70}")
-        print(f"  SCENARIO {scenario_idx}/{len(scenarios)}: seller_cost={seller_cost}  buyer_wtp={buyer_wtp}  ZOPA={zopa:+d}")
-        print(f"{'#' * 70}")
-
         for persona_label, persona_prompt in OPPONENT_PERSONAS.items():
             for run_idx in range(1, num_runs + 1):
-
-                print(f"\n{'=' * 70}")
-                print(f"  Persona: {persona_label}  |  Run: {run_idx}/{num_runs}")
-                print(f"{'=' * 70}")
-
                 for current_mode in modes_to_run:
-                    # Directory: scenario_<label>/vs_<persona>/run_<N>/<mode>/
                     paired_log_dir = os.path.join(
                         log_base, f"scenario_{scenario_label}",
                         f"vs_{persona_label}", f"run_{run_idx}", current_mode
                     )
-                    framework_log_dir = os.path.join(paired_log_dir, "framework_logs")
+                    tasks.append({
+                        "current_mode":   current_mode,
+                        "persona_label":  persona_label,
+                        "persona_prompt": persona_prompt,
+                        "self_is_seller": self_is_seller,
+                        "run_idx":        run_idx,
+                        "role":           role,
+                        "scenario_label": scenario_label,
+                        "seller_cost":    seller_cost,
+                        "buyer_wtp":      buyer_wtp,
+                        "paired_log_dir": paired_log_dir,
+                        "scenario_config": scenario_config,
+                        "task_id":        0,  # filled below
+                        "total_tasks":    0,
+                    })
 
-                    print(f"\n  [{current_mode.upper()}]  role={role}  scenario={scenario_label}  persona={persona_label}  run={run_idx}")
+    for i, t in enumerate(tasks, 1):
+        t["task_id"] = i
+        t["total_tasks"] = len(tasks)
 
-                    for attempt in range(MAX_RETRIES):
-                        try:
-                            if current_mode == "baseline":
-                                result, game = run_baseline_scenario(
-                                    persona_label, persona_prompt, self_is_seller,
-                                    framework_log_dir, scenario_config
-                                )
-                                write_game_log(
-                                    paired_log_dir, current_mode,
-                                    persona_label, persona_prompt,
-                                    self_is_seller, run_idx,
-                                    game, result,
-                                    profiler_agent=None,
-                                    config=scenario_config,
-                                )
-                            elif current_mode == "compare":
-                                # OSS vs OSS: swap self_model for compare_model
-                                compare_config = {
-                                    **scenario_config,
-                                    "self_model": scenario_config["compare_model"],
-                                }
-                                result, game = run_baseline_scenario(
-                                    persona_label, persona_prompt, self_is_seller,
-                                    framework_log_dir, compare_config
-                                )
-                                write_game_log(
-                                    paired_log_dir, current_mode,
-                                    persona_label, persona_prompt,
-                                    self_is_seller, run_idx,
-                                    game, result,
-                                    profiler_agent=None,
-                                    config=compare_config,
-                                )
-                            else:
-                                result, game, profiler_agent = run_profiler_scenario(
-                                    persona_label, persona_prompt, self_is_seller,
-                                    framework_log_dir, scenario_config
-                                )
-                                write_game_log(
-                                    paired_log_dir, current_mode,
-                                    persona_label, persona_prompt,
-                                    self_is_seller, run_idx,
-                                    game, result,
-                                    profiler_agent=profiler_agent,
-                                    config=scenario_config,
-                                )
+    # ── Resolve worker count ─────────────────────────────────────────
+    if workers is None:
+        workers = DEFAULT_WORKERS.get(mode, 3)
+    workers = min(workers, len(tasks)) if tasks else 1
 
-                            result.update({
-                                "mode":        current_mode,
-                                "persona":     persona_label,
-                                "run":         run_idx,
-                                "role":        role,
-                                "scenario":    scenario_label,
-                                "seller_cost": seller_cost,
-                                "buyer_wtp":   buyer_wtp,
-                            })
-                            all_results.append(result)
+    print(f"\nRunning {len(tasks)} games with {workers} worker(s)  (mode={mode})")
+    print(f"Output: {log_base}\n")
 
-                            print(f"    Result:  {result['final_response']}")
-                            print(f"    Seller:  {result['seller_outcome']}    Buyer: {result['buyer_outcome']}    Turns: {result['num_turns']}")
-                            print(f"    Log:     {paired_log_dir}/game.log")
-                            break
+    # ── Execute tasks ────────────────────────────────────────────────
+    all_results = []
 
-                        except Exception as e:
-                            print(f"    Attempt {attempt + 1}/{MAX_RETRIES} failed: {type(e).__name__}: {e}")
-                            if attempt < MAX_RETRIES - 1:
-                                print("    Retrying...")
-                            else:
-                                print(f"    All {MAX_RETRIES} attempts failed, skipping.")
-                                traceback.print_exc()
-                                all_results.append({
-                                    "mode":        current_mode,
-                                    "persona":     persona_label,
-                                    "run":         run_idx,
-                                    "role":        role,
-                                    "scenario":    scenario_label,
-                                    "seller_cost": seller_cost,
-                                    "buyer_wtp":   buyer_wtp,
-                                    "error":       str(e),
-                                })
+    if workers == 1:
+        # Sequential — same behavior as before, no thread overhead
+        for task in tasks:
+            result = _run_single_task(task)
+            all_results.append(result)
+    else:
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = {executor.submit(_run_single_task, t): t for t in tasks}
+            for future in as_completed(futures):
+                result = future.result()
+                all_results.append(result)
+
+    # Sort results to match deterministic order (scenario, persona, run, mode)
+    mode_order = {m: i for i, m in enumerate(modes_to_run)}
+    persona_order = {p: i for i, p in enumerate(OPPONENT_PERSONAS.keys())}
+    all_results.sort(key=lambda r: (
+        r.get("scenario", ""),
+        persona_order.get(r.get("persona", ""), 99),
+        r.get("run", 0),
+        mode_order.get(r.get("mode", ""), 99),
+    ))
 
     # ── Summary log ─────────────────────────────────────────────────
     summary_path = os.path.join(log_base, "summary.log")
@@ -715,15 +796,27 @@ def main():
             "Scenarios are taken in order from PRICE_SCENARIOS." % len(PRICE_SCENARIOS)
         ),
     )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=None,
+        help=(
+            "Number of parallel workers (default: auto based on mode). "
+            "Recommended max: baseline/profiler/both/all=3, compare=8. "
+            "Limited by llama-4-scout 30 RPM and gpt-oss 240 RPM."
+        ),
+    )
     args = parser.parse_args()
 
     num_scenarios = args.num_scenarios if args.num_scenarios is not None else len(PRICE_SCENARIOS)
     scenarios_to_run = PRICE_SCENARIOS[:num_scenarios]
+    effective_workers = args.workers or DEFAULT_WORKERS.get(args.mode, 3)
 
     print("Configuration:")
     print(f"  Mode:              {args.mode}")
     print(f"  Runs per persona:  {args.num_runs}")
     print(f"  Our role:          {args.role}")
+    print(f"  Workers:           {effective_workers}")
     print(f"  Scenarios:         {num_scenarios}/{len(PRICE_SCENARIOS)}")
     for sc, bw in scenarios_to_run:
         print(f"    seller_cost={sc:>3}  buyer_wtp={bw:>3}  ZOPA={bw - sc:+d}")
@@ -733,7 +826,8 @@ def main():
     print(f"  Profiler model:    {PROFILER_MODEL}")
     print(f"  Opponent model:    {OPPONENT_MODEL}")
 
-    run_experiments(args.mode, args.num_runs, args.role, num_scenarios=num_scenarios)
+    run_experiments(args.mode, args.num_runs, args.role,
+                    num_scenarios=num_scenarios, workers=args.workers)
 
 
 if __name__ == "__main__":
