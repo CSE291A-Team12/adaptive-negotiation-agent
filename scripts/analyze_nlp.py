@@ -21,6 +21,8 @@ import os
 import re
 import sys
 import time
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 
@@ -440,16 +442,28 @@ def get_client(api_key, base_url=DEFAULT_API_BASE):
     return openai.OpenAI(api_key=api_key, base_url=base_url)
 
 
-def llm_call(client, model, system, user, temperature=0.3):
-    resp = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": system},
-            {"role": "user", "content": user},
-        ],
-        temperature=temperature,
-    )
-    return resp.choices[0].message.content
+def llm_call(client, model, system, user, temperature=0.3, max_retries=5):
+    for attempt in range(max_retries):
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user},
+                ],
+                temperature=temperature,
+            )
+            return resp.choices[0].message.content
+        except Exception as e:
+            err_str = str(e)
+            if "429" in err_str or "rate" in err_str.lower():
+                wait = 2 ** attempt
+                print(f" [retry {attempt+1}/{max_retries}, waiting {wait}s]",
+                      end="", flush=True)
+                time.sleep(wait)
+            else:
+                raise
+    raise RuntimeError(f"Rate limited after {max_retries} retries")
 
 
 # ── Annotate ──────────────────────────────────────────────────────────
@@ -649,10 +663,9 @@ def build_query_context(games_full, annotations):
             if t.get("message"):
                 parts.append(f"{tag}     message: {t['message']}")
             if t.get("profiler_analysis"):
-                # Truncate long profiler blocks
                 pa = t["profiler_analysis"]
-                if len(pa) > 500:
-                    pa = pa[:500] + "..."
+                if len(pa) > 1500:
+                    pa = pa[:1500] + "..."
                 parts.append(f"{tag}     [PROFILER]: {pa}")
 
         # Include profiler logs if available
@@ -660,8 +673,8 @@ def build_query_context(games_full, annotations):
         if prof_logs:
             parts.append(f"{tag}   [PROFILER CALLS: {len(prof_logs)} total]")
             for pi, pl in enumerate(prof_logs, 1):
-                opp_msg = pl["opponent_message"][:200]
-                prof_out = pl["profiler_output"][:400]
+                opp_msg = pl["opponent_message"][:500]
+                prof_out = pl["profiler_output"][:1500]
                 parts.append(f"{tag}     Call {pi}: opp={opp_msg}")
                 parts.append(f"{tag}       -> {prof_out}")
 
@@ -786,33 +799,59 @@ def cmd_annotate(args):
 
     client = get_client(args.api_key, args.base_url)
     model = args.model
+    workers = getattr(args, "workers", 1) or 1
 
-    print(f"Annotating {len(games)} games with {model}...")
-
+    # Filter to only games that need annotation
+    to_annotate = []
     for i, g in enumerate(games):
         gid = g["game_id"]
         if gid in annotations and not args.force:
             print(f"  [{i+1}/{len(games)}] {gid} — cached")
-            continue
+        else:
+            to_annotate.append((i, g))
 
-        print(f"  [{i+1}/{len(games)}] {gid} — annotating...", end="", flush=True)
-        try:
-            ann = annotate_game(client, model, g)
-            annotations[gid] = ann
+    print(f"Annotating {len(to_annotate)} games with {model} ({workers} workers)...")
 
-            # Save incrementally
-            with open(ann_path, "w") as f:
-                json.dump(annotations, f, indent=2)
+    if workers <= 1:
+        # Sequential mode
+        for i, g in to_annotate:
+            gid = g["game_id"]
+            print(f"  [{i+1}/{len(games)}] {gid} — annotating...", end="", flush=True)
+            try:
+                ann = annotate_game(client, model, g)
+                annotations[gid] = ann
+                with open(ann_path, "w") as f:
+                    json.dump(annotations, f, indent=2)
+                if ann.get("parse_error"):
+                    print(" PARSE ERROR")
+                else:
+                    print(f" OK — {ann.get('game_summary', '')[:80]}")
+            except Exception as e:
+                print(f" ERROR: {e}")
+    else:
+        # Parallel mode
+        save_lock = threading.Lock()
+        done_count = [0]
 
-            if ann.get("parse_error"):
-                print(" PARSE ERROR")
-            else:
-                print(f" OK — {ann.get('game_summary', '')[:80]}")
-        except Exception as e:
-            print(f" ERROR: {e}")
+        def _annotate_one(idx_game):
+            idx, g = idx_game
+            gid = g["game_id"]
+            try:
+                ann = annotate_game(client, model, g)
+                with save_lock:
+                    annotations[gid] = ann
+                    with open(ann_path, "w") as f:
+                        json.dump(annotations, f, indent=2)
+                    done_count[0] += 1
+                    status = "PARSE ERROR" if ann.get("parse_error") else "OK"
+                    print(f"  [{done_count[0]}/{len(to_annotate)}] {gid} — {status}")
+            except Exception as e:
+                with save_lock:
+                    done_count[0] += 1
+                    print(f"  [{done_count[0]}/{len(to_annotate)}] {gid} — ERROR: {e}")
 
-        # Basic rate limiting
-        time.sleep(0.1)
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            list(pool.map(_annotate_one, to_annotate))
 
     print(f"\nAnnotations: {ann_path} ({len(annotations)} games)")
 
@@ -905,6 +944,8 @@ def main():
     p.add_argument("--model", default=DEFAULT_MODEL, help=f"Model (default: {DEFAULT_MODEL})")
     p.add_argument("--base-url", default=DEFAULT_API_BASE, help="API base URL")
     p.add_argument("--max-games", type=int, default=None, help="Limit number of games")
+    p.add_argument("--workers", type=int, default=1,
+                   help="Number of parallel API workers (default: 1)")
     p.add_argument("--filter", nargs="+", metavar="KEY=VAL",
                    help="Filter games (e.g. mode=profiler persona=hardball,friendly)")
     p.add_argument("--force", action="store_true", help="Re-annotate cached games")
